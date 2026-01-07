@@ -3,81 +3,166 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NeuroVision</title>
+    <title>NeuroVision: Automated Tumor Diagnosis</title>
+    <link rel="icon" href="fav.jpg" />
     <link rel="stylesheet" href="home.css" />
-    <link rel="icon" type="image/png" href="fav.jpg" />
   </head>
+
   <body>
+    <!-- HEADER -->
     <header class="header">
       <div class="logo">NeuroVision</div>
       <nav class="navbar">
-        <a href="home.html">Home</a>
+        <a href="#">Home</a>
         <a href="#">Detection</a>
-        <a href="#" class="login">Login</a>
+        <a href="login.html" class="login">Login</a>
       </nav>
     </header>
 
+    <!-- HERO -->
     <section class="hero">
-      <div class="hero1"></div>
-      <div class="hero2">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
         <h1>EMPOWERING DOCTORS WITH<br />INTELLIGENT DIAGNOSTICS</h1>
         <p>
-          Advanced AI technology that analyzes brain scans in seconds, helping
-          healthcare professionals make faster, more confident diagnoses and
-          improve patient outcomes.
+          Advanced AI technology that analyzes brain MRI scans in seconds,
+          supporting faster and more confident clinical decisions.
         </p>
       </div>
     </section>
 
+    <!-- INFO SECTION -->
     <section class="info-section">
+      <!-- ABOUT BRAIN TUMOR -->
       <div class="info-box">
         <div class="info-left">
-          <img src="brain.jpeg" alt="Doctors discussing" />
+          <img src="brain.jpeg" alt="Brain Tumor" />
         </div>
         <div class="info-right">
           <h2>About Brain Tumors</h2>
-          <p>
-            A brain tumor is an abnormal growth of cells within the brain or
-            skull. These tumors may be benign or malignant, and early detection
-            is essential.
+
+          <p class="short-text">
+            A brain tumor is an abnormal growth of cells inside the brain or
+            surrounding tissues. Early diagnosis plays a critical role in
+            treatment success.
           </p>
-          <a href="#"><button class="see-more">See More</button></a>
+
+          <p class="more-text">
+            <strong>Definition:</strong> A brain tumor occurs when abnormal
+            cells grow uncontrollably within the brain or nearby structures.
+            Tumors can be <strong>primary</strong> (originating in the brain) or
+            <strong>secondary</strong> (metastatic, spreading from other
+            organs). <br /><br />
+
+            <strong>Types of Brain Tumors:</strong><br />
+            • <strong>Gliomas:</strong> Develop from glial cells and include
+            astrocytoma, oligodendroglioma, and glioblastoma.<br />
+            • <strong>Meningiomas:</strong> Arise from the meninges; usually
+            benign and slow-growing.<br />
+            • <strong>Pituitary Tumors:</strong> Affect hormone production and
+            gland function.<br />
+            • <strong>Pineal Tumors:</strong> Rare tumors near the pineal
+            gland.<br /><br />
+
+            Tumors are graded by the World Health Organization (Grade I–IV)
+            based on aggressiveness. Recent research shows that deep learning
+            models applied to MRI images can classify tumor types with high
+            accuracy, supporting faster diagnosis and treatment planning.
+          </p>
+
+          <button class="see-more">See More</button>
         </div>
       </div>
-      <div class="info-box-reverse">
+
+      <!-- SIGNS & SYMPTOMS -->
+      <div class="info-box reverse">
         <div class="info-left">
-          <img src="sign.jpeg" alt="Symptoms image" />
+          <img src="sign.jpeg" alt="Symptoms" />
         </div>
         <div class="info-right">
           <h2>Signs & Symptoms</h2>
-          <p>
-            Symptoms vary depending on the tumor location and size. Common signs
-            include headaches, vomiting, blurred vision, seizures, and
-            difficulty speaking or balancing.
+
+          <p class="short-text">
+            Symptoms depend on tumor size, type, and location within the brain.
+            Some symptoms develop gradually, while others appear suddenly.
           </p>
-          <a href="#"><button class="see-more">See More</button></a>
+
+          <p class="more-text">
+            Common signs and symptoms of brain tumors include persistent or
+            worsening headaches, especially in the morning, seizures, nausea or
+            vomiting, blurred or double vision, and difficulty with balance or
+            coordination. Patients may also experience weakness or numbness in
+            the arms or legs, speech difficulties, memory problems, confusion,
+            personality changes, or hearing loss. Because these symptoms can
+            worsen over time, early medical evaluation is essential for
+            effective treatment.
+          </p>
+
+          <button class="see-more">See More</button>
         </div>
       </div>
+
+      <!-- HOW SYSTEM WORKS -->
       <div class="info-box">
         <div class="info-left">
-          <img src="AI.jpeg" alt="How system works" />
+          <img src="AI.jpeg" alt="AI System" />
         </div>
         <div class="info-right">
           <h2>How the System Works</h2>
-          <p>
-            Our system uses deep learning models to analyze MRI images and
-            detect tumors with high accuracy. The model classifies tumor types
-            and provides prediction confidence levels.
+
+          <p class="short-text">
+            NeuroVision uses artificial intelligence to assist doctors in brain
+            tumor detection through MRI analysis.
           </p>
-          <a href="#"><button class="see-more">See More</button></a>
+
+          <p class="more-text">
+            The NeuroVision system allows users to upload MRI brain images
+            through a secure web interface. The uploaded image undergoes
+            preprocessing such as resizing and normalization before being passed
+            to a trained deep learning model based on a convolutional neural
+            network (VGG). The model analyzes the MRI scan to detect abnormal
+            patterns and predicts whether a tumor is present. The system outputs
+            the predicted tumor class along with a confidence score, helping
+            clinicians make informed diagnostic decisions. This approach reduces
+            manual effort, speeds up diagnosis, and provides AI-assisted
+            clinical support.
+          </p>
+
+          <button class="see-more">See More</button>
         </div>
       </div>
     </section>
+
+    <!-- FOOTER -->
     <footer class="footer">
-      <div class="footer-logo">NeuroVision</div>
-      <p class="footer-copy">
-        © 2025 NeuroVision. For medical professional use only.
-      </p>
+      <h2>NeuroVision</h2>
+      <p>© 2025 NeuroVision. For medical professional use only.</p>
     </footer>
+
+    <!-- SCRIPT -->
+    <script>
+      // Scroll animation
+      const boxes = document.querySelectorAll(".info-box");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("show", entry.isIntersecting);
+          });
+        },
+        { threshold: 0.2 }
+      );
+      boxes.forEach((box) => observer.observe(box));
+
+      // See more toggle
+      const buttons = document.querySelectorAll(".see-more");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const moreText = btn.previousElementSibling;
+          moreText.classList.toggle("show");
+          btn.textContent =
+            btn.textContent === "See More" ? "See Less" : "See More";
+        });
+      });
+    </script>
   </body>
 </html>

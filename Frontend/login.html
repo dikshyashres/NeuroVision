@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroVision: Automated Tumor Diagnosis</title>
+    <link rel="stylesheet" href="auth.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="icon" href="fav.jpg" />
+  </head>
+  <body>
+    <div class="medical-container">
+      <!-- Main Content -->
+      <div class="content-wrapper">
+        <!-- Left Panel - Simple Welcome -->
+        <div class="welcome-panel">
+          <div class="welcome-content">
+            <h2>Welcome Back!</h2>
+            <p>Access your medical dashboard</p>
+            <div class="welcome-icon">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel - Forms -->
+        <div class="form-section">
+          <!-- Form Tabs - Using links for navigation -->
+          <div class="form-tabs">
+            <a href="#login" class="tab-btn active">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="#register" class="tab-btn">
+              <i class="fas fa-user-plus"></i> Register
+            </a>
+          </div>
+
+          <!-- Forms Container - Only Login Form visible by default -->
+          <div class="forms-container">
+            <!-- Login Form (Visible by default) -->
+            <form class="form active" id="login">
+              <div class="input-group">
+                <div class="input-icon">
+                  <i class="fas fa-user-md"></i>
+                </div>
+                <input type="text" placeholder="Medical ID or Email" required />
+              </div>
+
+              <div class="input-group">
+                <div class="input-icon">
+                  <i class="fas fa-lock"></i>
+                </div>
+                <input type="password" placeholder="Password" required />
+              </div>
+
+              <div class="form-options">
+                <label class="checkbox-label">
+                  <input type="checkbox" />
+                  <span>Remember me</span>
+                </label>
+                <a href="#" class="link-text">Forgot password?</a>
+              </div>
+
+              <button type="submit" class="submit-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+              </button>
+
+              <div class="form-footer">
+                <p>
+                  Don't have an account?
+                  <a href="#register" class="switch-form">Register</a>
+                </p>
+              </div>
+            </form>
+
+            <!-- Registration Form (Hidden by default) -->
+            <form class="form" id="register">
+              <div class="input-group">
+                <div class="input-icon">
+                  <i class="fas fa-user"></i>
+                </div>
+                <input type="text" placeholder="Full Name" required />
+              </div>
+
+              <div class="input-group">
+                <div class="input-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <input type="email" placeholder="Email Address" required />
+              </div>
+
+              <div class="input-group">
+                <div class="input-icon">
+                  <i class="fas fa-lock"></i>
+                </div>
+                <input type="password" placeholder="Create Password" required />
+              </div>
+
+              <div class="input-group">
+                <div class="input-icon">
+                  <i class="fas fa-lock"></i>
+                </div>
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  required
+                />
+              </div>
+
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" required />
+                  <span>I agree to the Terms & Conditions</span>
+                </label>
+              </div>
+
+              <button type="submit" class="submit-btn">
+                <i class="fas fa-user-plus"></i> Register
+              </button>
+
+              <div class="form-footer">
+                <p>
+                  Already have an account?
+                  <a href="#login" class="switch-form">Login</a>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    src = "auth.js";
+  </script>
+</html>
