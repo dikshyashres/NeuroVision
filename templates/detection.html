@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NeurVision: MRI Based Tumor Analysis</title>
+    <!-- FIXED: Use Flask's url_for instead of absolute path -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='detection.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="icon" href="{{ url_for('static', filename='fav.jpg') }}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <i class="fa-solid fa-brain"></i>
+      </div>
+      <div class="header-text">
+        <h1>NeuroVision: MRI-Based Tumor Analysis</h1>
+      </div>
+      <!-- Add navigation -->
+      <nav class="nav-links">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('detection') }}">Detection</a>
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </nav>
+    </header>
+
+    <!-- Main Section -->
+    <section class="container">
+      <!-- Input Card -->
+      <div class="card">
+        <div class="card-title">
+          <i class="fa-solid fa-upload"></i>
+          <h2>Input Section</h2>
+        </div>
+
+        <div class="upload-box" id="uploadBox">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <p class="upload-text">
+            <span>Click to upload</span> or drag and drop
+          </p>
+          <p class="formats">Accepted formats: JPG, PNG</p>
+          <input type="file" id="imageInput" accept=".jpg,.jpeg,.png" />
+          <img id="previewImage" class="preview-image" alt="Preview" />
+        </div>
+
+        <button class="analyze-btn" id="analyzeBtn">
+          <i class="fas fa-magnifying-glass"></i> Analyze MRI Scan
+        </button>
+      </div>
+
+      <!-- Output Card -->
+      <div class="card">
+        <div class="card-title">
+          <i class="fa-solid fa-wave-square"></i>
+          <h2>Output Section</h2>
+        </div>
+
+        <div class="output-box" id="outputBox">
+          <div class="result-content" id="resultContent">
+            <i class="fa-solid fa-brain"></i>
+            <h3>No analysis yet</h3>
+            <p>Upload an MRI scan to begin</p>
+          </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="history-section">
+          <h3><i class="fas fa-history"></i> Recent Analyses</h3>
+          <ul class="history-list" id="historyList">
+            <!-- History items will be added here -->
+          </ul>
+        </div>
+      </div>
+    </section>
+    <script>
+      // DOM Elements
+      const uploadBox = document.getElementById("uploadBox");
+      const imageInput = document.getElementById("imageInput");
+      const previewImage = document.getElementById("previewImage");
+      const analyzeBtn = document.getElementById("analyzeBtn");
+      const outputBox = document.getElementById("outputBox");
+      const resultContent = document.getElementById("resultContent");
+      const historyList = document.getElementById("historyList");
+
+      // Preview uploaded image
+      imageInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImage.src = e.target.result;
+            previewImage.style.display = "block";
+            uploadBox.querySelector(".fa-cloud-arrow-up").style.display =
+              "none";
+            uploadBox.querySelector(".upload-text").style.display = "none";
+            uploadBox.querySelector(".formats").style.display = "none";
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Send image to backend
+      analyzeBtn.addEventListener("click", detectTumor);
+
+      function detectTumor() {
+        if (!imageInput.files.length) {
+          alert("⚠️ Please upload an MRI image first.");
+          return;
+        }
+
+        const file = imageInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const base64String = reader.result;
+
+          const payload = { image: [base64String] };
+
+          // Show loading state
+          resultContent.innerHTML = `
+        <i class="fas fa-spinner fa-spin" style="font-size: 50px;"></i>
+        <h3>Analyzing MRI Scan...</h3>
+        <p>Please wait while we process your image</p>
+      `;
+          outputBox.style.background = "#f8fbff";
+
+          fetch("/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.error) {
+                resultContent.innerHTML = `
+              <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 50px;"></i>
+              <h3>Error</h3>
+              <p>${data.error}</p>
+            `;
+                return;
+              }
+
+              const prediction = data.predictions[0];
+              const highestConfidence = parseFloat(
+                prediction.highest_confidence
+              );
+
+              // Set background color based on result
+              if (prediction.tumor_type === "No Tumor") {
+                outputBox.style.background = "#d1fae5";
+              } else {
+                outputBox.style.background = "#fee2e2";
+              }
+
+              // Only show result if confidence > 50%
+              if (highestConfidence >= 50) {
+                resultContent.innerHTML = `
+              <div class="result-header ${
+                prediction.tumor_type === "No Tumor"
+                  ? "no-tumor"
+                  : "tumor-detected"
+              }">
+                <i class="fas ${
+                  prediction.tumor_type === "No Tumor"
+                    ? "fa-check-circle"
+                    : "fa-exclamation-triangle"
+                }"></i>
+                <h2>${prediction.tumor_type.toUpperCase()}</h2>
+                <div class="confidence-badge">
+                  Confidence: ${prediction.highest_confidence}
+                </div>
+              </div>
+              <div class="result-message">
+                ${
+                  prediction.tumor_type === "No Tumor"
+                    ? "✅ No tumor detected in the MRI scan."
+                    : `⚠️ <strong>${prediction.tumor_type}</strong> detected with high confidence. Please consult a medical professional.`
+                }
+              </div>
+            `;
+              } else {
+                // Low confidence result
+                outputBox.style.background = "#fef3c7";
+                resultContent.innerHTML = `
+              <div class="result-header low-confidence">
+                <i class="fas fa-question-circle" style="color: #f59e0b; font-size: 50px;"></i>
+                <h2>INCONCLUSIVE RESULT</h2>
+                <div class="confidence-badge low">
+                  Confidence: ${prediction.highest_confidence}
+                </div>
+              </div>
+              <div class="result-message">
+                <p>⚠️ Analysis confidence is below threshold (${prediction.highest_confidence} &lt; 50%).</p>
+                <p>Please upload a clearer MRI image or consult with a medical specialist.</p>
+              </div>
+            `;
+              }
+
+              // Update history
+              const li = document.createElement("li");
+              li.innerHTML = `
+            <img src="${previewImage.src}" width="50" height="50">
+            <div>
+              <strong>${prediction.tumor_type}</strong>
+              <span>${prediction.highest_confidence}</span>
+              <small>${new Date().toLocaleTimeString()}</small>
+            </div>
+          `;
+              historyList.prepend(li);
+            })
+            .catch((err) => {
+              console.error(err);
+              resultContent.innerHTML = `
+            <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 50px;"></i>
+            <h3>Network Error</h3>
+            <p>Please check your connection and try again</p>
+          `;
+            });
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      // Drag and drop functionality
+      uploadBox.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadBox.style.borderColor = "#1e66ff";
+        uploadBox.style.background = "#f0f6ff";
+      });
+
+      uploadBox.addEventListener("dragleave", () => {
+        uploadBox.style.borderColor = "#9ec5ff";
+        uploadBox.style.background = "transparent";
+      });
+
+      uploadBox.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadBox.style.borderColor = "#9ec5ff";
+        uploadBox.style.background = "transparent";
+
+        if (e.dataTransfer.files.length) {
+          imageInput.files = e.dataTransfer.files;
+          const event = new Event("change");
+          imageInput.dispatchEvent(event);
+        }
+      });
+    </script>
+  </body>
+</html>
