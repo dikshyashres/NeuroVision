@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NeuroVision: Automated Tumor Diagnosis</title>
+    <title>NeuroVision:MRI Based Tumor Analysis</title>
     <link rel="icon" href="{{ url_for('static', filename='fav.jpg') }}" />
     <link
       rel="stylesheet"
@@ -23,7 +23,7 @@
         <i class="fa-solid fa-brain"></i>
       </div>
       <div class="header-text">
-        <h1>NeuroVision: Automated Tumor Diagnosis</h1>
+        <h1>NeuroVision:MRI Based Tumor Analysis</h1>
       </div>
       <nav class="nav-links">
         <a href="{{ url_for('home') }}" class="active">Home</a>
@@ -180,7 +180,7 @@
             entry.target.classList.toggle("show", entry.isIntersecting);
           });
         },
-        { threshold: 0.2 }
+        { threshold: 0.2 },
       );
       boxes.forEach((box) => observer.observe(box));
 

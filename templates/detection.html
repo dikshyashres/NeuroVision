@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>NeurVision: MRI Based Tumor Analysis</title>
+    <title>NeurVision:MRI Based Tumor Analysis</title>
     <!-- FIXED: Use Flask's url_for instead of absolute path -->
     <link
       rel="stylesheet"
@@ -21,7 +21,7 @@
         <i class="fa-solid fa-brain"></i>
       </div>
       <div class="header-text">
-        <h1>NeuroVision: MRI-Based Tumor Analysis</h1>
+        <h1>NeuroVision:MRI-Based Tumor Analysis</h1>
       </div>
       <!-- Add navigation -->
       <nav class="nav-links">
@@ -151,7 +151,7 @@
 
               const prediction = data.predictions[0];
               const highestConfidence = parseFloat(
-                prediction.highest_confidence
+                prediction.highest_confidence,
               );
 
               // Set background color based on result
