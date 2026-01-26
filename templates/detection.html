@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <title>NeurVision:MRI Based Tumor Analysis</title>
-    <!-- FIXED: Use Flask's url_for instead of absolute path -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='detection.css') }}"
@@ -23,7 +22,6 @@
       <div class="header-text">
         <h1>NeuroVision:MRI-Based Tumor Analysis</h1>
       </div>
-      <!-- Add navigation -->
       <nav class="nav-links">
         <a href="{{ url_for('home') }}">Home</a>
         <a href="{{ url_for('detection') }}">Detection</a>
@@ -81,6 +79,33 @@
         </div>
       </div>
     </section>
+
+    <!-- Grad-CAM Modal -->
+    <div id="gradcamModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2><i class="fas fa-fire"></i> Grad-CAM Heatmap Visualization</h2>
+        <div class="gradcam-container">
+          <div class="gradcam-image-wrapper">
+            <h3>Original MRI</h3>
+            <img id="originalImage" alt="Original" />
+          </div>
+          <div class="gradcam-image-wrapper">
+            <h3>Tumor Localization Heatmap</h3>
+            <img id="gradcamImage" alt="Grad-CAM" />
+          </div>
+        </div>
+        <div class="gradcam-legend">
+          <p><strong>Color Guide:</strong></p>
+          <div class="legend-bar"></div>
+          <div class="legend-labels">
+            <span>Low Activation</span>
+            <span>High Activation (Tumor Region)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       // DOM Elements
       const uploadBox = document.getElementById("uploadBox");
@@ -90,6 +115,12 @@
       const outputBox = document.getElementById("outputBox");
       const resultContent = document.getElementById("resultContent");
       const historyList = document.getElementById("historyList");
+      const modal = document.getElementById("gradcamModal");
+      const closeModal = document.getElementsByClassName("close")[0];
+      const originalImage = document.getElementById("originalImage");
+      const gradcamImage = document.getElementById("gradcamImage");
+
+      let currentGradcamData = null;
 
       // Preview uploaded image
       imageInput.addEventListener("change", function (e) {
@@ -108,6 +139,25 @@
         }
       });
 
+      // Modal controls
+      closeModal.onclick = function () {
+        modal.style.display = "none";
+      };
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+
+      function showGradcam() {
+        if (currentGradcamData) {
+          originalImage.src = previewImage.src;
+          gradcamImage.src = currentGradcamData;
+          modal.style.display = "block";
+        }
+      }
+
       // Send image to backend
       analyzeBtn.addEventListener("click", detectTumor);
 
@@ -122,15 +172,13 @@
 
         reader.onload = () => {
           const base64String = reader.result;
-
           const payload = { image: [base64String] };
 
-          // Show loading state
           resultContent.innerHTML = `
-        <i class="fas fa-spinner fa-spin" style="font-size: 50px;"></i>
-        <h3>Analyzing MRI Scan...</h3>
-        <p>Please wait while we process your image</p>
-      `;
+            <i class="fas fa-spinner fa-spin" style="font-size: 50px;"></i>
+            <h3>Analyzing MRI Scan...</h3>
+            <p>Please wait while we process your image</p>
+          `;
           outputBox.style.background = "#f8fbff";
 
           fetch("/predict", {
@@ -140,90 +188,102 @@
           })
             .then((res) => res.json())
             .then((data) => {
+              console.log("📥 Received data:", data);
+
               if (data.error) {
                 resultContent.innerHTML = `
-              <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 50px;"></i>
-              <h3>Error</h3>
-              <p>${data.error}</p>
-            `;
+                  <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 50px;"></i>
+                  <h3>Error</h3>
+                  <p>${data.error}</p>
+                `;
                 return;
               }
 
               const prediction = data.predictions[0];
+              console.log("🔍 Prediction:", prediction);
+              console.log("🔥 Grad-CAM data exists:", !!prediction.gradcam);
+              console.log("🔥 Grad-CAM data type:", typeof prediction.gradcam);
+
               const highestConfidence = parseFloat(
                 prediction.highest_confidence,
               );
+              currentGradcamData = prediction.gradcam;
 
-              // Set background color based on result
               if (prediction.tumor_type === "No Tumor") {
                 outputBox.style.background = "#d1fae5";
               } else {
                 outputBox.style.background = "#fee2e2";
               }
 
-              // Only show result if confidence > 50%
               if (highestConfidence >= 50) {
                 resultContent.innerHTML = `
-              <div class="result-header ${
-                prediction.tumor_type === "No Tumor"
-                  ? "no-tumor"
-                  : "tumor-detected"
-              }">
-                <i class="fas ${
-                  prediction.tumor_type === "No Tumor"
-                    ? "fa-check-circle"
-                    : "fa-exclamation-triangle"
-                }"></i>
-                <h2>${prediction.tumor_type.toUpperCase()}</h2>
-                <div class="confidence-badge">
-                  Confidence: ${prediction.highest_confidence}
-                </div>
-              </div>
-              <div class="result-message">
-                ${
-                  prediction.tumor_type === "No Tumor"
-                    ? "✅ No tumor detected in the MRI scan."
-                    : `⚠️ <strong>${prediction.tumor_type}</strong> detected with high confidence. Please consult a medical professional.`
+                  <div class="result-header ${prediction.tumor_type === "No Tumor" ? "no-tumor" : "tumor-detected"}">
+                    <i class="fas ${prediction.tumor_type === "No Tumor" ? "fa-check-circle" : "fa-exclamation-triangle"}"></i>
+                    <h2>${prediction.tumor_type.toUpperCase()}</h2>
+                    <div class="confidence-badge">
+                      Confidence: ${prediction.highest_confidence}
+                    </div>
+                  </div>
+                  <div class="result-message">
+                    ${
+                      prediction.tumor_type === "No Tumor"
+                        ? "✅ No tumor detected in the MRI scan."
+                        : `⚠️ <strong>${prediction.tumor_type}</strong> detected with high confidence. Please consult a medical professional.`
+                    }
+                  </div>
+                `;
+
+                // Add Grad-CAM button if tumor detected and gradcam available
+                if (
+                  prediction.gradcam &&
+                  prediction.tumor_type !== "No Tumor"
+                ) {
+                  const gradcamBtn = document.createElement("button");
+                  gradcamBtn.className = "gradcam-btn";
+                  gradcamBtn.innerHTML =
+                    '<i class="fas fa-fire"></i> View Heatmap Visualization';
+                  gradcamBtn.onclick = showGradcam;
+                  resultContent.appendChild(gradcamBtn);
+
+                  console.log("✅ Grad-CAM button added");
+                } else {
+                  console.log("⚠️ No Grad-CAM data available");
                 }
-              </div>
-            `;
               } else {
-                // Low confidence result
                 outputBox.style.background = "#fef3c7";
                 resultContent.innerHTML = `
-              <div class="result-header low-confidence">
-                <i class="fas fa-question-circle" style="color: #f59e0b; font-size: 50px;"></i>
-                <h2>INCONCLUSIVE RESULT</h2>
-                <div class="confidence-badge low">
-                  Confidence: ${prediction.highest_confidence}
-                </div>
-              </div>
-              <div class="result-message">
-                <p>⚠️ Analysis confidence is below threshold (${prediction.highest_confidence} &lt; 50%).</p>
-                <p>Please upload a clearer MRI image or consult with a medical specialist.</p>
-              </div>
-            `;
+                  <div class="result-header low-confidence">
+                    <i class="fas fa-question-circle" style="color: #f59e0b; font-size: 50px;"></i>
+                    <h2>INCONCLUSIVE RESULT</h2>
+                    <div class="confidence-badge low">
+                      Confidence: ${prediction.highest_confidence}
+                    </div>
+                  </div>
+                  <div class="result-message">
+                    <p>⚠️ Analysis confidence is below threshold (${prediction.highest_confidence} &lt; 50%).</p>
+                    <p>Please upload a clearer MRI image or consult with a medical specialist.</p>
+                  </div>
+                `;
               }
 
-              // Update history
               const li = document.createElement("li");
               li.innerHTML = `
-            <img src="${previewImage.src}" width="50" height="50">
-            <div>
-              <strong>${prediction.tumor_type}</strong>
-              <span>${prediction.highest_confidence}</span>
-              <small>${new Date().toLocaleTimeString()}</small>
-            </div>
-          `;
+                <img src="${previewImage.src}" width="50" height="50">
+                <div>
+                  <strong>${prediction.tumor_type}</strong>
+                  <span>${prediction.highest_confidence}</span>
+                  <small>${new Date().toLocaleTimeString()}</small>
+                </div>
+              `;
               historyList.prepend(li);
             })
             .catch((err) => {
               console.error(err);
               resultContent.innerHTML = `
-            <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 50px;"></i>
-            <h3>Network Error</h3>
-            <p>Please check your connection and try again</p>
-          `;
+                <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 50px;"></i>
+                <h3>Network Error</h3>
+                <p>Please check your connection and try again</p>
+              `;
             });
         };
 

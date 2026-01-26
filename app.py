@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory
-from tensorflow.keras.models import model_from_json
+from tensorflow.keras.models import model_from_json, Model
+import tensorflow as tf
 import numpy as np
 import base64
 from io import BytesIO
@@ -8,6 +9,7 @@ import os
 import json
 import re
 import hashlib
+import cv2
 
 app = Flask(__name__)
 app.secret_key = "neurovision_secret_key_2024_prod_12345"
@@ -91,6 +93,108 @@ def decode_base64_image(b64str):
         raise
 
 # -----------------------------
+# Grad-CAM Function
+# -----------------------------
+def generate_gradcam(model, img_array, pred_index=None):
+    """
+    Generate Grad-CAM heatmap for the given image
+    """
+    try:
+        print(f"🔥 Starting Grad-CAM generation...")
+        print(f"   Model: {type(model)}")
+        print(f"   Image shape: {img_array.shape}")
+        print(f"   Pred index: {pred_index}")
+        
+        # Find the last convolutional layer
+        last_conv_layer = None
+        for layer in reversed(model.layers):
+            if 'conv' in layer.name.lower():
+                last_conv_layer = layer
+                break
+        
+        if last_conv_layer is None:
+            print("❌ No convolutional layer found")
+            return None
+        
+        print(f"✅ Using layer: {last_conv_layer.name}")
+        
+        # Create a model that outputs both predictions and conv layer output
+        grad_model = Model(
+            inputs=model.input,
+            outputs=[model.output, last_conv_layer.output]
+        )
+        
+        # Expand dimensions for batch processing
+        img_tensor = np.expand_dims(img_array, axis=0)
+        print(f"   Image tensor shape: {img_tensor.shape}")
+        
+        # Get gradients
+        with tf.GradientTape() as tape:
+            preds, conv_outputs = grad_model(img_tensor)
+            if pred_index is None:
+                pred_index = tf.argmax(preds[0])
+            class_channel = preds[:, pred_index]
+        
+        print(f"   Conv outputs shape: {conv_outputs.shape}")
+        
+        # Get gradients of the predicted class with respect to conv layer
+        grads = tape.gradient(class_channel, conv_outputs)
+        
+        if grads is None:
+            print("❌ Gradients are None")
+            return None
+        
+        print(f"   Gradients shape: {grads.shape}")
+        
+        # Global average pooling of gradients
+        pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+        
+        # Weight the channels by the gradients
+        conv_outputs = conv_outputs[0]
+        pooled_grads = pooled_grads.numpy()
+        conv_outputs = conv_outputs.numpy()
+        
+        for i in range(pooled_grads.shape[0]):
+            conv_outputs[:, :, i] *= pooled_grads[i]
+        
+        # Average the weighted feature maps
+        heatmap = np.mean(conv_outputs, axis=-1)
+        
+        print(f"   Heatmap shape before resize: {heatmap.shape}")
+        
+        # Normalize heatmap
+        heatmap = np.maximum(heatmap, 0)
+        if np.max(heatmap) != 0:
+            heatmap /= np.max(heatmap)
+        
+        # Resize heatmap to match original image size
+        heatmap = cv2.resize(heatmap, (IMG_SIZE, IMG_SIZE))
+        
+        # Apply colormap
+        heatmap = np.uint8(255 * heatmap)
+        heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+        
+        # Convert original image back to uint8
+        original_img = np.uint8(img_array * 255)
+        
+        # Superimpose heatmap on original image
+        superimposed_img = cv2.addWeighted(original_img, 0.6, heatmap, 0.4, 0)
+        
+        # Convert to base64 for sending to frontend
+        _, buffer = cv2.imencode('.png', cv2.cvtColor(superimposed_img, cv2.COLOR_RGB2BGR))
+        gradcam_base64 = base64.b64encode(buffer).decode('utf-8')
+        
+        print(f"✅ Grad-CAM base64 length: {len(gradcam_base64)} characters")
+        
+        return f"data:image/png;base64,{gradcam_base64}"
+        
+    except Exception as e:
+        print(f"❌ Grad-CAM error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+# -----------------------------
 # Routes
 # -----------------------------
 
@@ -153,11 +257,8 @@ def login():
             
             save_users(users)
             
-            # REGISTRATION SUCCESS - DON'T AUTO LOGIN
-            # Just show success message and stay on login page
             print(f"✅ New user registered: {email}")
             
-            # Clear any previous errors and show success message
             return render_template("login.html", 
                 success_message="Registration successful! Please login with your credentials.")
         
@@ -180,7 +281,6 @@ def login():
                 input_hash = hash_password(password)
                 
                 if stored_hash == input_hash:
-                    # Login successful - create session
                     session['user'] = email
                     session['name'] = users[email]['name']
                     print(f"✅ User '{email}' logged in successfully")
@@ -192,7 +292,6 @@ def login():
                 return render_template("login.html", 
                     error="Account not found. Please register first.")
     
-    # GET request - show login page
     return render_template("login.html")
 
 @app.route("/home")
@@ -240,20 +339,35 @@ def predict():
         if not processed_imgs:
             return jsonify({"error": "No valid images to process"}), 400
         
-        processed_imgs = np.array(processed_imgs)
-        predictions = loaded_model.predict(processed_imgs)
+        processed_imgs_batch = np.array(processed_imgs)
+        predictions = loaded_model.predict(processed_imgs_batch)
         class_indices = np.argmax(predictions, axis=1)
         
         results = []
-        for idx, pred in zip(class_indices, predictions):
+        for idx, (img_array, pred) in enumerate(zip(processed_imgs, predictions)):
+            class_idx = class_indices[idx]
+            
+            # Generate Grad-CAM only if tumor is detected
+            gradcam_image = None
+            if CLASS_NAMES[class_idx] != 'No Tumor':
+                print(f"🔥 Generating Grad-CAM for {CLASS_NAMES[class_idx]}...")
+                gradcam_image = generate_gradcam(loaded_model, img_array, class_idx)
+                if gradcam_image:
+                    print(f"✅ Grad-CAM generated successfully")
+                else:
+                    print(f"❌ Grad-CAM generation failed")
+            else:
+                print(f"ℹ️ No tumor detected, skipping Grad-CAM")
+            
             confidence_dict = {}
             for cls, conf in zip(CLASS_NAMES, pred):
                 confidence_dict[cls] = f"{conf*100:.2f}%"
             
             results.append({
-                "tumor_type": CLASS_NAMES[idx],
+                "tumor_type": CLASS_NAMES[class_idx],
                 "confidence": confidence_dict,
-                "highest_confidence": f"{pred[idx]*100:.2f}%"
+                "highest_confidence": f"{pred[class_idx]*100:.2f}%",
+                "gradcam": gradcam_image
             })
         
         return jsonify({
@@ -282,24 +396,23 @@ def serve_static(filename):
 # Run the app
 # -----------------------------
 if __name__ == "__main__":
-    # Ensure required directories exist
     required_dirs = ['static', 'templates', 'model']
     for dir_name in required_dirs:
         if not os.path.exists(dir_name):
             os.makedirs(dir_name)
             print(f"📁 Created directory: {dir_name}")
     
-    # Initialize users file if it doesn't exist
     if not os.path.exists(USERS_FILE):
         save_users({})
         print(f"📁 Created users database: {USERS_FILE}")
     
     print("\n" + "="*50)
-    print("🧠 NeuroVision AI Diagnostic System")
+    print("🧠 NeuroVision AI Diagnostic System with Grad-CAM")
     print("="*50)
     
     if loaded_model:
         print("✅ Model: VGG16 loaded successfully")
+        print("✅ Grad-CAM: Enabled for tumor visualization")
     else:
         print("⚠️  Warning: Model not loaded!")
         print("⚠️  Prediction functionality will not work")
