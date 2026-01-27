@@ -80,27 +80,56 @@
       </div>
     </section>
 
-    <!-- Grad-CAM Modal -->
+    <!-- Enhanced Grad-CAM Modal with 2-Panel Layout -->
     <div id="gradcamModal" class="modal">
-      <div class="modal-content">
+      <div class="modal-content-large">
         <span class="close">&times;</span>
-        <h2><i class="fas fa-fire"></i> Grad-CAM Heatmap Visualization</h2>
-        <div class="gradcam-container">
-          <div class="gradcam-image-wrapper">
-            <h3>Original MRI</h3>
-            <img id="originalImage" alt="Original" />
+        <h2 class="modal-title">Grad-CAM Class Activation Mapping</h2>
+
+        <div class="gradcam-three-panel">
+          <!-- Panel 1: Raw Image -->
+          <div class="gradcam-panel">
+            <div class="panel-header">Raw Image</div>
+            <div class="panel-image-container">
+              <img id="rawImage" alt="Raw MRI" />
+            </div>
+            <div class="panel-info">
+              <div class="info-label">Actual Label</div>
+              <div class="info-value" id="actualLabel">Loading...</div>
+            </div>
           </div>
-          <div class="gradcam-image-wrapper">
-            <h3>Tumor Localization Heatmap</h3>
-            <img id="gradcamImage" alt="Grad-CAM" />
+
+          <!-- Panel 2: Pure Heatmap -->
+          <div class="gradcam-panel">
+            <div class="panel-header">Class Activation Heatmap</div>
+            <div class="panel-image-container">
+              <img id="heatmapImage" alt="Pure Heatmap" />
+            </div>
+            <div class="panel-info">
+              <div class="info-label">Confidence</div>
+              <div class="info-value confidence" id="confidenceValue">
+                Loading...
+              </div>
+            </div>
           </div>
         </div>
-        <div class="gradcam-legend">
-          <p><strong>Color Guide:</strong></p>
-          <div class="legend-bar"></div>
-          <div class="legend-labels">
-            <span>Low Activation</span>
-            <span>High Activation (Tumor Region)</span>
+
+        <!-- Grad-CAM Legend -->
+        <div class="gradcam-legend-enhanced">
+          <div class="legend-header">
+            <i class="fas fa-palette"></i> Activation Intensity Scale
+          </div>
+          <div class="legend-content">
+            <div class="legend-bar-gradient"></div>
+            <div class="legend-labels-enhanced">
+              <span>Low<br />Activation</span>
+              <span>Medium<br />Activation</span>
+              <span>High<br />Activation<br />(Tumor Region)</span>
+            </div>
+          </div>
+          <div class="legend-description">
+            Red/Yellow regions indicate areas with highest neural network
+            activation, suggesting tumor presence
           </div>
         </div>
       </div>
@@ -117,10 +146,15 @@
       const historyList = document.getElementById("historyList");
       const modal = document.getElementById("gradcamModal");
       const closeModal = document.getElementsByClassName("close")[0];
-      const originalImage = document.getElementById("originalImage");
-      const gradcamImage = document.getElementById("gradcamImage");
+
+      // 2-Panel modal elements
+      const rawImage = document.getElementById("rawImage");
+      const heatmapImage = document.getElementById("heatmapImage");
+      const actualLabel = document.getElementById("actualLabel");
+      const confidenceValue = document.getElementById("confidenceValue");
 
       let currentGradcamData = null;
+      let currentPrediction = null;
 
       // Preview uploaded image
       imageInput.addEventListener("change", function (e) {
@@ -151,10 +185,44 @@
       };
 
       function showGradcam() {
-        if (currentGradcamData) {
-          originalImage.src = previewImage.src;
-          gradcamImage.src = currentGradcamData;
-          modal.style.display = "block";
+        console.log("🎯 showGradcam called");
+        console.log("   currentGradcamData:", currentGradcamData);
+        console.log("   currentPrediction:", currentPrediction);
+
+        if (currentGradcamData && currentPrediction) {
+          // Check if gradcam data has the expected structure
+          if (currentGradcamData.heatmap) {
+            console.log("✅ Setting modal images...");
+            // Set images
+            rawImage.src = previewImage.src;
+            heatmapImage.src = currentGradcamData.heatmap;
+
+            // Set information
+            actualLabel.textContent = currentPrediction.tumor_type;
+            actualLabel.className =
+              currentPrediction.tumor_type === "No Tumor"
+                ? "info-value label-negative"
+                : "info-value label-positive";
+
+            confidenceValue.textContent = currentPrediction.highest_confidence;
+
+            console.log("✅ Opening modal");
+            modal.style.display = "block";
+          } else {
+            console.error(
+              "❌ Grad-CAM data structure is invalid:",
+              currentGradcamData,
+            );
+            alert("Grad-CAM visualization data is not in the expected format.");
+          }
+        } else {
+          console.error(
+            "❌ Missing data - gradcam:",
+            !!currentGradcamData,
+            "prediction:",
+            !!currentPrediction,
+          );
+          alert("Grad-CAM visualization is not available for this analysis.");
         }
       }
 
@@ -189,6 +257,10 @@
             .then((res) => res.json())
             .then((data) => {
               console.log("📥 Received data:", data);
+              console.log(
+                "📦 Full data structure:",
+                JSON.stringify(data, null, 2),
+              );
 
               if (data.error) {
                 resultContent.innerHTML = `
@@ -200,14 +272,26 @@
               }
 
               const prediction = data.predictions[0];
-              console.log("🔍 Prediction:", prediction);
-              console.log("🔥 Grad-CAM data exists:", !!prediction.gradcam);
-              console.log("🔥 Grad-CAM data type:", typeof prediction.gradcam);
+              currentPrediction = prediction;
+              console.log("🔍 Prediction object:", prediction);
+              console.log("🔍 Tumor type:", prediction.tumor_type);
+              console.log("🔥 Grad-CAM data:", prediction.gradcam);
+              console.log("🔥 Grad-CAM type:", typeof prediction.gradcam);
+
+              if (prediction.gradcam) {
+                console.log(
+                  "🔥 Grad-CAM keys:",
+                  Object.keys(prediction.gradcam),
+                );
+                console.log("🔥 Has heatmap:", !!prediction.gradcam.heatmap);
+              }
 
               const highestConfidence = parseFloat(
                 prediction.highest_confidence,
               );
               currentGradcamData = prediction.gradcam;
+
+              console.log("💾 Stored currentGradcamData:", currentGradcamData);
 
               if (prediction.tumor_type === "No Tumor") {
                 outputBox.style.background = "#d1fae5";
@@ -234,20 +318,30 @@
                 `;
 
                 // Add Grad-CAM button if tumor detected and gradcam available
+                console.log("🔥 Checking Grad-CAM data...");
+                console.log("   Tumor type:", prediction.tumor_type);
+                console.log("   Gradcam exists:", !!prediction.gradcam);
+                console.log("   Gradcam value:", prediction.gradcam);
+
                 if (
                   prediction.gradcam &&
                   prediction.tumor_type !== "No Tumor"
                 ) {
+                  console.log("✅ Creating Grad-CAM button");
                   const gradcamBtn = document.createElement("button");
                   gradcamBtn.className = "gradcam-btn";
-                  gradcamBtn.innerHTML =
-                    '<i class="fas fa-fire"></i> View Heatmap Visualization';
+                  gradcamBtn.innerHTML = "View Activation Mapping";
                   gradcamBtn.onclick = showGradcam;
                   resultContent.appendChild(gradcamBtn);
-
-                  console.log("✅ Grad-CAM button added");
+                  console.log("✅ Grad-CAM button added to DOM");
                 } else {
                   console.log("⚠️ No Grad-CAM data available");
+                  console.log(
+                    "   Reason: gradcam=" +
+                      !!prediction.gradcam +
+                      ", tumor=" +
+                      prediction.tumor_type,
+                  );
                 }
               } else {
                 outputBox.style.background = "#fef3c7";

@@ -93,105 +93,211 @@ def decode_base64_image(b64str):
         raise
 
 # -----------------------------
-# Grad-CAM Function
+# Enhanced Grad-CAM Function
 # -----------------------------
 def generate_gradcam(model, img_array, pred_index=None):
     """
     Generate Grad-CAM heatmap for the given image
+    Returns: Dictionary with overlay and pure heatmap
     """
     try:
+        print(f"\n{'='*60}")
         print(f"🔥 Starting Grad-CAM generation...")
-        print(f"   Model: {type(model)}")
+        print(f"   Model type: {type(model)}")
+        print(f"   Model layers count: {len(model.layers)}")
         print(f"   Image shape: {img_array.shape}")
         print(f"   Pred index: {pred_index}")
+        
+        # Debug: Print all layer names
+        print(f"\n   Available layers:")
+        for i, layer in enumerate(model.layers):
+            print(f"   [{i}] {layer.name} - {type(layer).__name__}")
         
         # Find the last convolutional layer
         last_conv_layer = None
         for layer in reversed(model.layers):
-            if 'conv' in layer.name.lower():
+            layer_type = type(layer).__name__
+            if 'conv' in layer.name.lower() or 'Conv' in layer_type:
                 last_conv_layer = layer
                 break
         
         if last_conv_layer is None:
-            print("❌ No convolutional layer found")
+            print("\n❌ No convolutional layer found in model!")
+            print("   Tried to find layers with 'conv' in name or Conv2D type")
             return None
         
-        print(f"✅ Using layer: {last_conv_layer.name}")
+        print(f"\n✅ Using conv layer: {last_conv_layer.name}")
+        try:
+            print(f"   Layer output shape: {last_conv_layer.output.shape}")
+        except:
+            print(f"   Layer output shape: (unable to determine)")
         
         # Create a model that outputs both predictions and conv layer output
-        grad_model = Model(
-            inputs=model.input,
-            outputs=[model.output, last_conv_layer.output]
-        )
+        try:
+            grad_model = Model(
+                inputs=model.input,
+                outputs=[model.output, last_conv_layer.output]
+            )
+            print(f"✅ Created gradient model successfully")
+        except Exception as e:
+            print(f"❌ Failed to create gradient model: {str(e)}")
+            return None
         
         # Expand dimensions for batch processing
         img_tensor = np.expand_dims(img_array, axis=0)
+        img_tensor = tf.convert_to_tensor(img_tensor, dtype=tf.float32)
         print(f"   Image tensor shape: {img_tensor.shape}")
+        print(f"   Image tensor dtype: {img_tensor.dtype}")
         
         # Get gradients
-        with tf.GradientTape() as tape:
-            preds, conv_outputs = grad_model(img_tensor)
-            if pred_index is None:
-                pred_index = tf.argmax(preds[0])
-            class_channel = preds[:, pred_index]
-        
-        print(f"   Conv outputs shape: {conv_outputs.shape}")
-        
-        # Get gradients of the predicted class with respect to conv layer
-        grads = tape.gradient(class_channel, conv_outputs)
-        
-        if grads is None:
-            print("❌ Gradients are None")
+        try:
+            with tf.GradientTape() as tape:
+                tape.watch(img_tensor)
+                model_outputs = grad_model(img_tensor, training=False)
+                
+                print(f"   Model output type: {type(model_outputs)}")
+                
+                # Handle both list and tensor outputs
+                if isinstance(model_outputs, list):
+                    print(f"   Output is a list with {len(model_outputs)} elements")
+                    preds = model_outputs[0]
+                    conv_outputs = model_outputs[1]
+                else:
+                    preds, conv_outputs = model_outputs
+                
+                # Convert to tensors if needed
+                preds = tf.convert_to_tensor(preds)
+                conv_outputs = tf.convert_to_tensor(conv_outputs)
+                
+                print(f"   Raw preds shape: {preds.shape}")
+                print(f"   Raw conv outputs shape: {conv_outputs.shape}")
+                
+                # Fix preds shape - should be (batch_size, num_classes)
+                # Remove any extra dimensions
+                while len(preds.shape) > 2:
+                    print(f"   ⚠️  Predictions has extra dimension, squeezing")
+                    preds = tf.squeeze(preds, axis=1)
+                    print(f"   After squeeze: {preds.shape}")
+                
+                # Add batch dimension if completely missing
+                if len(preds.shape) == 1:
+                    print(f"   ⚠️  Predictions is 1D, adding batch dimension")
+                    preds = tf.expand_dims(preds, axis=0)
+                    print(f"   After expand: {preds.shape}")
+                
+                # Fix conv_outputs shape - should be (batch_size, height, width, channels)
+                if len(conv_outputs.shape) == 3:
+                    print(f"   ⚠️  Conv outputs is 3D, adding batch dimension")
+                    conv_outputs = tf.expand_dims(conv_outputs, axis=0)
+                    print(f"   Reshaped conv outputs: {conv_outputs.shape}")
+                
+                if pred_index is None:
+                    pred_index = tf.argmax(preds[0])
+                pred_index = int(pred_index)
+                
+                print(f"   Final preds shape: {preds.shape}")
+                print(f"   Final conv outputs shape: {conv_outputs.shape}")
+                print(f"   Trying to access class index: {pred_index}")
+                print(f"   Max index possible: {preds.shape[-1] - 1}")
+                
+                class_channel = preds[:, pred_index]
+            
+            print(f"   Predictions shape: {preds.shape}")
+            print(f"   Conv outputs shape: {conv_outputs.shape}")
+            print(f"   Selected class index: {pred_index}")
+            print(f"   Class channel value: {class_channel.numpy()}")
+        except Exception as e:
+            print(f"❌ Error during forward pass: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return None
         
-        print(f"   Gradients shape: {grads.shape}")
+        # Get gradients of the predicted class with respect to conv layer
+        try:
+            grads = tape.gradient(class_channel, conv_outputs)
+            
+            if grads is None:
+                print("❌ Gradients are None - this shouldn't happen!")
+                return None
+            
+            print(f"✅ Gradients shape: {grads.shape}")
+        except Exception as e:
+            print(f"❌ Error computing gradients: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return None
         
         # Global average pooling of gradients
         pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+        print(f"   Pooled gradients shape: {pooled_grads.shape}")
         
         # Weight the channels by the gradients
-        conv_outputs = conv_outputs[0]
+        conv_outputs = conv_outputs[0].numpy()
         pooled_grads = pooled_grads.numpy()
-        conv_outputs = conv_outputs.numpy()
         
         for i in range(pooled_grads.shape[0]):
             conv_outputs[:, :, i] *= pooled_grads[i]
         
         # Average the weighted feature maps
         heatmap = np.mean(conv_outputs, axis=-1)
-        
-        print(f"   Heatmap shape before resize: {heatmap.shape}")
+        print(f"   Heatmap shape: {heatmap.shape}")
+        print(f"   Heatmap range: [{heatmap.min():.4f}, {heatmap.max():.4f}]")
         
         # Normalize heatmap
         heatmap = np.maximum(heatmap, 0)
         if np.max(heatmap) != 0:
             heatmap /= np.max(heatmap)
+        else:
+            print("⚠️  Warning: Heatmap max is 0, no activation detected")
+        
+        print(f"   Normalized heatmap range: [{heatmap.min():.4f}, {heatmap.max():.4f}]")
         
         # Resize heatmap to match original image size
-        heatmap = cv2.resize(heatmap, (IMG_SIZE, IMG_SIZE))
+        heatmap_resized = cv2.resize(heatmap, (IMG_SIZE, IMG_SIZE))
         
-        # Apply colormap
-        heatmap = np.uint8(255 * heatmap)
-        heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+        # Apply colormap for heatmap visualization
+        heatmap_colored = np.uint8(255 * heatmap_resized)
+        heatmap_jet = cv2.applyColorMap(heatmap_colored, cv2.COLORMAP_JET)
         
         # Convert original image back to uint8
         original_img = np.uint8(img_array * 255)
         
-        # Superimpose heatmap on original image
-        superimposed_img = cv2.addWeighted(original_img, 0.6, heatmap, 0.4, 0)
+        # Create overlay image (blended)
+        superimposed_img = cv2.addWeighted(original_img, 0.5, heatmap_jet, 0.5, 0)
         
-        # Convert to base64 for sending to frontend
-        _, buffer = cv2.imencode('.png', cv2.cvtColor(superimposed_img, cv2.COLOR_RGB2BGR))
-        gradcam_base64 = base64.b64encode(buffer).decode('utf-8')
+        # Convert images to base64
+        try:
+            # 1. Overlay (heatmap on original)
+            _, buffer1 = cv2.imencode('.png', cv2.cvtColor(superimposed_img, cv2.COLOR_RGB2BGR))
+            overlay_base64 = base64.b64encode(buffer1).decode('utf-8')
+            
+            # 2. Pure heatmap visualization
+            _, buffer2 = cv2.imencode('.png', heatmap_jet)
+            heatmap_base64 = base64.b64encode(buffer2).decode('utf-8')
+            
+            print(f"✅ Overlay base64 length: {len(overlay_base64)}")
+            print(f"✅ Heatmap base64 length: {len(heatmap_base64)}")
+        except Exception as e:
+            print(f"❌ Error encoding images: {str(e)}")
+            return None
         
-        print(f"✅ Grad-CAM base64 length: {len(gradcam_base64)} characters")
+        result = {
+            "overlay": f"data:image/png;base64,{overlay_base64}",
+            "heatmap": f"data:image/png;base64,{heatmap_base64}"
+        }
         
-        return f"data:image/png;base64,{gradcam_base64}"
+        print(f"✅ Grad-CAM generated successfully!")
+        print(f"{'='*60}\n")
+        
+        return result
         
     except Exception as e:
-        print(f"❌ Grad-CAM error: {str(e)}")
+        print(f"\n{'='*60}")
+        print(f"❌ GRAD-CAM FATAL ERROR: {str(e)}")
+        print(f"{'='*60}")
         import traceback
         traceback.print_exc()
+        print(f"{'='*60}\n")
         return None
 
 # -----------------------------
@@ -346,29 +452,51 @@ def predict():
         results = []
         for idx, (img_array, pred) in enumerate(zip(processed_imgs, predictions)):
             class_idx = class_indices[idx]
+            tumor_type = CLASS_NAMES[class_idx]
+            
+            print(f"\n{'='*60}")
+            print(f"Processing image {idx + 1}/{len(processed_imgs)}")
+            print(f"Predicted tumor type: {tumor_type}")
+            print(f"Confidence: {pred[class_idx]*100:.2f}%")
+            print(f"{'='*60}")
             
             # Generate Grad-CAM only if tumor is detected
-            gradcam_image = None
-            if CLASS_NAMES[class_idx] != 'No Tumor':
-                print(f"🔥 Generating Grad-CAM for {CLASS_NAMES[class_idx]}...")
-                gradcam_image = generate_gradcam(loaded_model, img_array, class_idx)
-                if gradcam_image:
-                    print(f"✅ Grad-CAM generated successfully")
-                else:
-                    print(f"❌ Grad-CAM generation failed")
+            gradcam_data = None
+            if tumor_type != 'No Tumor':
+                print(f"🔥 Tumor detected! Generating Grad-CAM for {tumor_type}...")
+                try:
+                    gradcam_data = generate_gradcam(loaded_model, img_array, class_idx)
+                    if gradcam_data:
+                        print(f"✅ Grad-CAM generated successfully!")
+                        print(f"   Has overlay: {bool(gradcam_data.get('overlay'))}")
+                        print(f"   Has heatmap: {bool(gradcam_data.get('heatmap'))}")
+                    else:
+                        print(f"❌ Grad-CAM generation returned None!")
+                except Exception as grad_error:
+                    print(f"❌ Exception during Grad-CAM generation: {str(grad_error)}")
+                    import traceback
+                    traceback.print_exc()
+                    gradcam_data = None
             else:
-                print(f"ℹ️ No tumor detected, skipping Grad-CAM")
+                print(f"ℹ️  No tumor detected, skipping Grad-CAM generation")
             
             confidence_dict = {}
             for cls, conf in zip(CLASS_NAMES, pred):
                 confidence_dict[cls] = f"{conf*100:.2f}%"
             
-            results.append({
-                "tumor_type": CLASS_NAMES[class_idx],
+            result = {
+                "tumor_type": tumor_type,
                 "confidence": confidence_dict,
                 "highest_confidence": f"{pred[class_idx]*100:.2f}%",
-                "gradcam": gradcam_image
-            })
+                "gradcam": gradcam_data
+            }
+            
+            print(f"\nResult for image {idx + 1}:")
+            print(f"  - Tumor: {result['tumor_type']}")
+            print(f"  - Confidence: {result['highest_confidence']}")
+            print(f"  - Grad-CAM: {bool(result['gradcam'])}")
+            
+            results.append(result)
         
         return jsonify({
             "success": True,
@@ -407,12 +535,12 @@ if __name__ == "__main__":
         print(f"📁 Created users database: {USERS_FILE}")
     
     print("\n" + "="*50)
-    print("🧠 NeuroVision AI Diagnostic System with Grad-CAM")
+    print("🧠 NeuroVision AI Diagnostic System with Enhanced Grad-CAM")
     print("="*50)
     
     if loaded_model:
         print("✅ Model: VGG16 loaded successfully")
-        print("✅ Grad-CAM: Enabled for tumor visualization")
+        print("✅ Grad-CAM: Enhanced 3-panel visualization enabled")
     else:
         print("⚠️  Warning: Model not loaded!")
         print("⚠️  Prediction functionality will not work")
