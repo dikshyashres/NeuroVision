@@ -10,9 +10,19 @@ import json
 import re
 import hashlib
 import cv2
+<<<<<<< HEAD
+=======
+import requests
+>>>>>>> 00ae94d (Chatbot added)
 
 app = Flask(__name__)
 app.secret_key = "neurovision_secret_key_2024_prod_12345"
+
+# -----------------------------
+# Gemini API Config (FREE)
+# -----------------------------
+GEMINI_API_KEY = "AIzaSyAGoCeiFvBKhsUGCOL_eTvmT0uIFRpOxt8"
+GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
 
 # -----------------------------
 # Configuration
@@ -508,6 +518,100 @@ def predict():
         print(f"❌ Prediction error: {str(e)}")
         return jsonify({"error": f"Prediction failed: {str(e)}"}), 500
 
+# -----------------------------
+# Chatbot Route — Gemini 1.5 Flash (FREE)
+# -----------------------------
+@app.route("/chat", methods=["POST"])
+def chat():
+    if 'user' not in session:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    data = request.get_json()
+    user_message = data.get("message", "").strip()
+    context = data.get("context", {})
+    history = data.get("history", [])
+
+    if not user_message:
+        return jsonify({"error": "Empty message"}), 400
+
+    if context and context.get("tumor_type"):
+        tumor_type = context.get("tumor_type", "Unknown")
+        highest_confidence = context.get("highest_confidence", "N/A")
+        conf_dict = context.get("confidence", {})
+        has_gradcam = context.get("has_gradcam", False)
+        scores_text = ", ".join([f"{k}: {v}" for k, v in conf_dict.items()]) if conf_dict else "N/A"
+        gradcam_text = (
+            "Grad-CAM heatmap was generated. Red/warm regions = areas the model focused on (likely tumor). Blue/green = low attention."
+            if has_gradcam else "No Grad-CAM generated (no tumor detected)."
+        )
+        analysis_block = f"""
+CURRENT SCAN RESULTS:
+- Detected: {tumor_type}
+- Confidence: {highest_confidence}
+- All class scores: {scores_text}
+- Grad-CAM: {gradcam_text}
+"""
+    else:
+        analysis_block = "No scan has been analyzed yet in this session."
+
+    system_prompt = f"""You are NeuroVision Assistant — a helpful, empathetic AI inside a brain MRI tumor detection system.
+
+The VGG16 model classifies MRI scans into:
+- Glioma: Tumor from glial cells; can be low-grade (slow) or high-grade (aggressive)
+- Meningioma: Tumor from brain/spinal cord lining; usually benign and slow-growing
+- Pituitary: Tumor in pituitary gland; usually benign, affects hormone production
+- No Tumor: No tumor found
+
+Grad-CAM = heatmap showing which MRI regions the AI focused on. Red/yellow = high activation (likely tumor). Blue = low activation.
+
+{analysis_block}
+
+INSTRUCTIONS:
+- Explain scan results clearly in simple language
+- Answer questions about Grad-CAM, tumor types, symptoms, and treatments
+- Be warm and empathetic — users may be patients or worried family members
+- Keep answers concise (2-4 sentences) unless more detail is needed
+- ALWAYS remind users to consult a qualified doctor — this tool is NOT a medical diagnosis"""
+
+    gemini_contents = []
+    for msg in history[-8:]:
+        role = "user" if msg["role"] == "user" else "model"
+        gemini_contents.append({"role": role, "parts": [{"text": msg["content"]}]})
+    gemini_contents.append({"role": "user", "parts": [{"text": user_message}]})
+
+    payload = {
+        "system_instruction": {"parts": [{"text": system_prompt}]},
+        "contents": gemini_contents,
+        "generationConfig": {"temperature": 0.7, "maxOutputTokens": 512}
+    }
+
+    try:
+        response = requests.post(
+            GEMINI_URL,
+            json=payload,
+            headers={"Content-Type": "application/json"},
+            timeout=15
+        )
+        response.raise_for_status()
+        result = response.json()
+        reply = result["candidates"][0]["content"]["parts"][0]["text"]
+        return jsonify({"reply": reply})
+
+    except requests.exceptions.Timeout:
+        return jsonify({"reply": "Sorry, the response timed out. Please try again."}), 200
+    except requests.exceptions.HTTPError as e:
+        status = e.response.status_code
+        print(f"❌ Gemini HTTP error {status}: {e.response.text}")
+        if status == 429:
+            return jsonify({"reply": "⏳ Too many requests — the free API limit was hit. Please wait 30 seconds and try again."}), 200
+        elif status == 400:
+            return jsonify({"reply": "⚠️ Invalid API key. Please check your GEMINI_API_KEY."}), 200
+        return jsonify({"reply": f"⚠️ API error ({status}). Please try again in a moment."}), 200
+    except Exception as e:
+        print(f"❌ Gemini error: {str(e)}")
+        return jsonify({"reply": "Sorry, something went wrong. Please try again."}), 200
+
+
 @app.route("/logout")
 def logout():
     if 'user' in session:
@@ -544,6 +648,8 @@ if __name__ == "__main__":
     else:
         print("⚠️  Warning: Model not loaded!")
         print("⚠️  Prediction functionality will not work")
+
+    print("✅ Gemini chatbot: API key configured")
     
     print("\n📧 Registration System:")
     print("   • Users must register with email")

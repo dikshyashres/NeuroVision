@@ -16,5 +16,11 @@
     "email": "ashwita90@gmail.com",
     "password_hash": "9e34aea49a4a4b9d621e2f60a4cee547b1a4c4c6505ed68435b93ad750fa6c63",
     "created_at": "2026-01-08T05:34:38"
+  },
+  "bsulakhnal.321@gmail.com": {
+    "name": "Bishula Khanal",
+    "email": "bsulakhnal.321@gmail.com",
+    "password_hash": "6390d85d66e7465bc677fb7ad142f94aec88fae0b1664702e9c5c88cfce241cb",
+    "created_at": "2026-01-19T07:07:09"
   }
 }

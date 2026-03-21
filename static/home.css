@@ -26,7 +26,10 @@ body {
 .logo {
   width: 60px;
   height: 60px;
+<<<<<<< HEAD
   background: linear-gradient(135deg, #1e66ff 0%, #869fce 100%);
+=======
+>>>>>>> 00ae94d (Chatbot added)
   border-radius: 14px;
   display: flex;
   align-items: center;
