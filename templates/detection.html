@@ -140,36 +140,82 @@
          ============================================================ -->
 
     <!-- Floating Toggle Button -->
-    <button id="chatbot-toggle" onclick="toggleChat()" title="Ask NeuroVision AI">
-      <svg id="chat-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    <button
+      id="chatbot-toggle"
+      onclick="toggleChat()"
+      title="Ask NeuroVision AI"
+    >
+      <svg
+        id="chat-icon"
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        />
       </svg>
-      <svg id="close-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none">
-        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      <svg
+        id="close-icon"
+        width="26"
+        height="26"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        style="display: none"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
       </svg>
       <span id="chat-badge">●</span>
     </button>
 
     <!-- Chat Panel -->
     <div id="chatbot-panel">
-
       <!-- Header -->
       <div id="chat-header">
-        <div style="display:flex;align-items:center;gap:10px;">
+        <div style="display: flex; align-items: center; gap: 10px">
           <div id="chat-avatar">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"
+              />
             </svg>
           </div>
           <div>
-            <div style="font-weight:700;font-size:14px;letter-spacing:0.3px;">NeuroVision AI</div>
+            <div
+              style="font-weight: 700; font-size: 14px; letter-spacing: 0.3px"
+            >
+              NeuroVision AI
+            </div>
             <div id="chat-status">Ask about your scan results</div>
           </div>
         </div>
         <button onclick="clearChat()" title="Clear chat" id="clear-btn">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
-            <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6l-1 14H6L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+            <path d="M9 6V4h6v2" />
           </svg>
         </button>
       </div>
@@ -178,18 +224,30 @@
       <div id="chat-messages">
         <div class="chat-msg bot">
           <div class="msg-bubble">
-            👋 Hi! I'm NeuroVision AI Assistant. Upload a scan and I can explain your results, walk you through the Grad-CAM heatmap, or answer general questions about brain tumors.<br><br>
-            <em style="opacity:0.7;font-size:12px;">⚠️ Always consult a medical professional for diagnosis.</em>
+            👋 Hi! I'm NeuroVision AI Assistant. Upload a scan and I can explain
+            your results, walk you through the Grad-CAM heatmap, or answer
+            general questions about brain tumors.<br /><br />
+            <em style="opacity: 0.7; font-size: 12px"
+              >⚠️ Always consult a medical professional for diagnosis.</em
+            >
           </div>
         </div>
       </div>
 
       <!-- Quick suggestions -->
       <div id="suggestions">
-        <button class="sugg-btn" onclick="sendSuggestion(this)">What is Grad-CAM?</button>
-        <button class="sugg-btn" onclick="sendSuggestion(this)">Explain my results</button>
-        <button class="sugg-btn" onclick="sendSuggestion(this)">What is Glioma?</button>
-        <button class="sugg-btn" onclick="sendSuggestion(this)">How accurate is this?</button>
+        <button class="sugg-btn" onclick="sendSuggestion(this)">
+          What is Grad-CAM?
+        </button>
+        <button class="sugg-btn" onclick="sendSuggestion(this)">
+          Explain my results
+        </button>
+        <button class="sugg-btn" onclick="sendSuggestion(this)">
+          What is Glioma?
+        </button>
+        <button class="sugg-btn" onclick="sendSuggestion(this)">
+          How accurate is this?
+        </button>
       </div>
 
       <!-- Input row -->
@@ -198,14 +256,26 @@
           id="chat-input"
           type="text"
           placeholder="Ask about your scan..."
-          onkeydown="if(event.key==='Enter'){event.preventDefault();sendMessage();}"
+          onkeydown="
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              sendMessage();
+            }
+          "
           maxlength="500"
           autocomplete="off"
         />
         <button id="send-btn" onclick="sendMessage()" title="Send">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="22" y1="2" x2="11" y2="13"/>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
           </svg>
         </button>
       </div>
@@ -218,146 +288,293 @@
       /* Toggle button */
       #chatbot-toggle {
         position: fixed;
-        bottom: 28px; right: 28px;
-        width: 58px; height: 58px;
+        bottom: 28px;
+        right: 28px;
+        width: 58px;
+        height: 58px;
         border-radius: 50%;
         background: linear-gradient(135deg, #1a6cf6, #0b46c2);
-        border: none; cursor: pointer; color: white;
-        display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 4px 20px rgba(26,108,246,0.45);
+        border: none;
+        cursor: pointer;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(26, 108, 246, 0.45);
         z-index: 9999;
-        transition: transform 0.2s, box-shadow 0.2s;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
       }
-      #chatbot-toggle:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(26,108,246,0.6); }
+      #chatbot-toggle:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 28px rgba(26, 108, 246, 0.6);
+      }
       #chat-badge {
-        position: absolute; top: 8px; right: 8px;
-        color: #ff4757; font-size: 13px; line-height: 1;
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        color: #ff4757;
+        font-size: 13px;
+        line-height: 1;
         animation: pulse 1.5s infinite;
       }
-      @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
 
       /* Panel */
       #chatbot-panel {
         position: fixed;
-        bottom: 100px; right: 28px;
-        width: 365px; height: 525px;
+        bottom: 100px;
+        right: 28px;
+        width: 365px;
+        height: 525px;
         background: #fff;
         border-radius: 18px;
-        box-shadow: 0 12px 50px rgba(0,0,0,0.16), 0 2px 10px rgba(0,0,0,0.07);
-        display: none; flex-direction: column;
-        overflow: hidden; z-index: 9998;
-        font-family: 'Segoe UI', -apple-system, sans-serif;
-        animation: slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1);
+        box-shadow:
+          0 12px 50px rgba(0, 0, 0, 0.16),
+          0 2px 10px rgba(0, 0, 0, 0.07);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 9998;
+        font-family:
+          "Segoe UI",
+          -apple-system,
+          sans-serif;
+        animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       @keyframes slideUp {
-        from { opacity:0; transform: translateY(16px) scale(0.97); }
-        to   { opacity:1; transform: translateY(0) scale(1); }
+        from {
+          opacity: 0;
+          transform: translateY(16px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
       }
 
       /* Header */
       #chat-header {
         background: linear-gradient(135deg, #1a6cf6, #0b46c2);
-        color: white; padding: 13px 15px;
-        display: flex; align-items: center; justify-content: space-between;
+        color: white;
+        padding: 13px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         flex-shrink: 0;
       }
       #chat-avatar {
-        width: 35px; height: 35px;
-        background: rgba(255,255,255,0.2);
+        width: 35px;
+        height: 35px;
+        background: rgba(255, 255, 255, 0.2);
         border-radius: 9px;
-        display: flex; align-items: center; justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      #chat-status { font-size: 11px; opacity: 0.8; margin-top: 1px; }
+      #chat-status {
+        font-size: 11px;
+        opacity: 0.8;
+        margin-top: 1px;
+      }
       #clear-btn {
-        background: none; border: none; cursor: pointer;
-        color: rgba(255,255,255,0.75); padding: 5px; border-radius: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.75);
+        padding: 5px;
+        border-radius: 5px;
         transition: color 0.2s;
       }
-      #clear-btn:hover { color: white; }
+      #clear-btn:hover {
+        color: white;
+      }
 
       /* Messages */
       #chat-messages {
-        flex: 1; overflow-y: auto;
+        flex: 1;
+        overflow-y: auto;
         padding: 14px 13px 6px;
-        display: flex; flex-direction: column; gap: 9px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
         scroll-behavior: smooth;
       }
-      #chat-messages::-webkit-scrollbar { width: 4px; }
-      #chat-messages::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 4px; }
+      #chat-messages::-webkit-scrollbar {
+        width: 4px;
+      }
+      #chat-messages::-webkit-scrollbar-thumb {
+        background: #e0e0e0;
+        border-radius: 4px;
+      }
 
-      .chat-msg { display: flex; }
-      .chat-msg.bot  { justify-content: flex-start; }
-      .chat-msg.user { justify-content: flex-end; }
+      .chat-msg {
+        display: flex;
+      }
+      .chat-msg.bot {
+        justify-content: flex-start;
+      }
+      .chat-msg.user {
+        justify-content: flex-end;
+      }
 
       .msg-bubble {
-        max-width: 83%; padding: 9px 13px;
+        max-width: 83%;
+        padding: 9px 13px;
         border-radius: 15px;
-        font-size: 13.5px; line-height: 1.55;
+        font-size: 13.5px;
+        line-height: 1.55;
         word-break: break-word;
       }
-      .chat-msg.bot  .msg-bubble { background: #eef3ff; color: #1a1a2e; border-bottom-left-radius: 4px; }
-      .chat-msg.user .msg-bubble { background: linear-gradient(135deg,#1a6cf6,#0b46c2); color: white; border-bottom-right-radius: 4px; }
+      .chat-msg.bot .msg-bubble {
+        background: #eef3ff;
+        color: #1a1a2e;
+        border-bottom-left-radius: 4px;
+      }
+      .chat-msg.user .msg-bubble {
+        background: linear-gradient(135deg, #1a6cf6, #0b46c2);
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
 
       /* Typing dots */
       .typing-dots {
-        display: flex; gap: 4px; padding: 11px 13px;
-        background: #eef3ff; border-radius: 15px; border-bottom-left-radius: 4px;
+        display: flex;
+        gap: 4px;
+        padding: 11px 13px;
+        background: #eef3ff;
+        border-radius: 15px;
+        border-bottom-left-radius: 4px;
         width: fit-content;
       }
       .typing-dots span {
-        width: 7px; height: 7px; background: #1a6cf6;
-        border-radius: 50%; animation: bounce 1.1s infinite; opacity: 0.6;
+        width: 7px;
+        height: 7px;
+        background: #1a6cf6;
+        border-radius: 50%;
+        animation: bounce 1.1s infinite;
+        opacity: 0.6;
       }
-      .typing-dots span:nth-child(2) { animation-delay: 0.18s; }
-      .typing-dots span:nth-child(3) { animation-delay: 0.36s; }
-      @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+      .typing-dots span:nth-child(2) {
+        animation-delay: 0.18s;
+      }
+      .typing-dots span:nth-child(3) {
+        animation-delay: 0.36s;
+      }
+      @keyframes bounce {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+        30% {
+          transform: translateY(-6px);
+        }
+      }
 
       /* Suggestions */
       #suggestions {
         padding: 5px 13px 3px;
-        display: flex; flex-wrap: wrap; gap: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
         flex-shrink: 0;
       }
       .sugg-btn {
-        font-size: 11.5px; padding: 4px 10px;
-        background: #eef3ff; color: #1a6cf6;
-        border: 1px solid #c5d8fd; border-radius: 20px;
-        cursor: pointer; white-space: nowrap;
-        transition: background 0.15s, transform 0.1s;
+        font-size: 11.5px;
+        padding: 4px 10px;
+        background: #eef3ff;
+        color: #1a6cf6;
+        border: 1px solid #c5d8fd;
+        border-radius: 20px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          background 0.15s,
+          transform 0.1s;
         font-family: inherit;
       }
-      .sugg-btn:hover { background: #dce9ff; transform: translateY(-1px); }
+      .sugg-btn:hover {
+        background: #dce9ff;
+        transform: translateY(-1px);
+      }
 
       /* Input row */
       #chat-input-row {
         padding: 9px 13px 13px;
-        display: flex; gap: 7px; align-items: center;
+        display: flex;
+        gap: 7px;
+        align-items: center;
         border-top: 1px solid #f0f0f0;
         flex-shrink: 0;
       }
       #chat-input {
-        flex: 1; border: 1.5px solid #e5e5e5; border-radius: 22px;
-        padding: 8px 15px; font-size: 13.5px;
-        outline: none; background: #fafafa; color: #1a1a2e;
-        font-family: inherit; transition: border-color 0.2s;
+        flex: 1;
+        border: 1.5px solid #e5e5e5;
+        border-radius: 22px;
+        padding: 8px 15px;
+        font-size: 13.5px;
+        outline: none;
+        background: #fafafa;
+        color: #1a1a2e;
+        font-family: inherit;
+        transition: border-color 0.2s;
       }
-      #chat-input:focus { border-color: #1a6cf6; background: #fff; }
-      #chat-input::placeholder { color: #bbb; }
+      #chat-input:focus {
+        border-color: #1a6cf6;
+        background: #fff;
+      }
+      #chat-input::placeholder {
+        color: #bbb;
+      }
 
       #send-btn {
-        width: 38px; height: 38px; border-radius: 50%;
-        background: linear-gradient(135deg,#1a6cf6,#0b46c2);
-        border: none; cursor: pointer; color: white;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0; transition: transform 0.15s, opacity 0.15s;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1a6cf6, #0b46c2);
+        border: none;
+        cursor: pointer;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition:
+          transform 0.15s,
+          opacity 0.15s;
       }
-      #send-btn:hover  { transform: scale(1.1); }
-      #send-btn:active { transform: scale(0.94); }
-      #send-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+      #send-btn:hover {
+        transform: scale(1.1);
+      }
+      #send-btn:active {
+        transform: scale(0.94);
+      }
+      #send-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        transform: none;
+      }
 
       @media (max-width: 480px) {
-        #chatbot-panel { width: calc(100vw - 20px); right: 10px; bottom: 88px; }
-        #chatbot-toggle { right: 14px; bottom: 18px; }
+        #chatbot-panel {
+          width: calc(100vw - 20px);
+          right: 10px;
+          bottom: 88px;
+        }
+        #chatbot-toggle {
+          right: 14px;
+          bottom: 18px;
+        }
       }
     </style>
 
@@ -366,22 +583,22 @@
          ============================================================ -->
     <script>
       // ── Detection DOM refs ──────────────────────────────────────
-      const uploadBox     = document.getElementById("uploadBox");
-      const imageInput    = document.getElementById("imageInput");
-      const previewImage  = document.getElementById("previewImage");
-      const analyzeBtn    = document.getElementById("analyzeBtn");
-      const outputBox     = document.getElementById("outputBox");
+      const uploadBox = document.getElementById("uploadBox");
+      const imageInput = document.getElementById("imageInput");
+      const previewImage = document.getElementById("previewImage");
+      const analyzeBtn = document.getElementById("analyzeBtn");
+      const outputBox = document.getElementById("outputBox");
       const resultContent = document.getElementById("resultContent");
-      const historyList   = document.getElementById("historyList");
-      const modal         = document.getElementById("gradcamModal");
-      const closeModal    = document.getElementsByClassName("close")[0];
-      const rawImage      = document.getElementById("rawImage");
-      const heatmapImage  = document.getElementById("heatmapImage");
-      const actualLabel   = document.getElementById("actualLabel");
+      const historyList = document.getElementById("historyList");
+      const modal = document.getElementById("gradcamModal");
+      const closeModal = document.getElementsByClassName("close")[0];
+      const rawImage = document.getElementById("rawImage");
+      const heatmapImage = document.getElementById("heatmapImage");
+      const actualLabel = document.getElementById("actualLabel");
       const confidenceValue = document.getElementById("confidenceValue");
 
       let currentGradcamData = null;
-      let currentPrediction  = null;
+      let currentPrediction = null;
 
       // ── Image preview ───────────────────────────────────────────
       imageInput.addEventListener("change", function (e) {
@@ -391,7 +608,8 @@
           reader.onload = function (e) {
             previewImage.src = e.target.result;
             previewImage.style.display = "block";
-            uploadBox.querySelector(".fa-cloud-arrow-up").style.display = "none";
+            uploadBox.querySelector(".fa-cloud-arrow-up").style.display =
+              "none";
             uploadBox.querySelector(".upload-text").style.display = "none";
             uploadBox.querySelector(".formats").style.display = "none";
           };
@@ -400,16 +618,24 @@
       });
 
       // ── Modal ───────────────────────────────────────────────────
-      closeModal.onclick = () => modal.style.display = "none";
-      window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; };
+      closeModal.onclick = () => (modal.style.display = "none");
+      window.onclick = (e) => {
+        if (e.target == modal) modal.style.display = "none";
+      };
 
       function showGradcam() {
-        if (currentGradcamData && currentPrediction && currentGradcamData.heatmap) {
+        if (
+          currentGradcamData &&
+          currentPrediction &&
+          currentGradcamData.heatmap
+        ) {
           rawImage.src = previewImage.src;
           heatmapImage.src = currentGradcamData.heatmap;
           actualLabel.textContent = currentPrediction.tumor_type;
-          actualLabel.className = currentPrediction.tumor_type === "No Tumor"
-            ? "info-value label-negative" : "info-value label-positive";
+          actualLabel.className =
+            currentPrediction.tumor_type === "No Tumor"
+              ? "info-value label-negative"
+              : "info-value label-positive";
           confidenceValue.textContent = currentPrediction.highest_confidence;
           modal.style.display = "block";
         } else {
@@ -444,48 +670,54 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ image: [base64String] }),
           })
-          .then(res => res.json())
-          .then(data => {
-            if (data.error) {
-              resultContent.innerHTML = `
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.error) {
+                resultContent.innerHTML = `
                 <i class="fas fa-exclamation-triangle" style="color:#ef4444;font-size:50px;"></i>
                 <h3>Error</h3><p>${data.error}</p>
               `;
-              return;
-            }
+                return;
+              }
 
-            const prediction = data.predictions[0];
-            currentPrediction  = prediction;
-            currentGradcamData = prediction.gradcam;
+              const prediction = data.predictions[0];
+              currentPrediction = prediction;
+              currentGradcamData = prediction.gradcam;
 
-            const highestConf = parseFloat(prediction.highest_confidence);
+              const highestConf = parseFloat(prediction.highest_confidence);
 
-            outputBox.style.background = prediction.tumor_type === "No Tumor" ? "#d1fae5" : "#fee2e2";
+              outputBox.style.background =
+                prediction.tumor_type === "No Tumor" ? "#d1fae5" : "#fee2e2";
 
-            if (highestConf >= 50) {
-              resultContent.innerHTML = `
+              if (highestConf >= 50) {
+                resultContent.innerHTML = `
                 <div class="result-header ${prediction.tumor_type === "No Tumor" ? "no-tumor" : "tumor-detected"}">
                   <i class="fas ${prediction.tumor_type === "No Tumor" ? "fa-check-circle" : "fa-exclamation-triangle"}"></i>
                   <h2>${prediction.tumor_type.toUpperCase()}</h2>
                   <div class="confidence-badge">Confidence: ${prediction.highest_confidence}</div>
                 </div>
                 <div class="result-message">
-                  ${prediction.tumor_type === "No Tumor"
-                    ? "✅ No tumor detected in the MRI scan."
-                    : `⚠️ <strong>${prediction.tumor_type}</strong> detected with high confidence. Please consult a medical professional.`}
+                  ${
+                    prediction.tumor_type === "No Tumor"
+                      ? "✅ No tumor detected in the MRI scan."
+                      : `⚠️ <strong>${prediction.tumor_type}</strong> detected with high confidence. Please consult a medical professional.`
+                  }
                 </div>
               `;
 
-              if (prediction.gradcam && prediction.tumor_type !== "No Tumor") {
-                const gradcamBtn = document.createElement("button");
-                gradcamBtn.className = "gradcam-btn";
-                gradcamBtn.innerHTML = "View Activation Mapping";
-                gradcamBtn.onclick = showGradcam;
-                resultContent.appendChild(gradcamBtn);
-              }
-            } else {
-              outputBox.style.background = "#fef3c7";
-              resultContent.innerHTML = `
+                if (
+                  prediction.gradcam &&
+                  prediction.tumor_type !== "No Tumor"
+                ) {
+                  const gradcamBtn = document.createElement("button");
+                  gradcamBtn.className = "gradcam-btn";
+                  gradcamBtn.innerHTML = "View Activation Mapping";
+                  gradcamBtn.onclick = showGradcam;
+                  resultContent.appendChild(gradcamBtn);
+                }
+              } else {
+                outputBox.style.background = "#fef3c7";
+                resultContent.innerHTML = `
                 <div class="result-header low-confidence">
                   <i class="fas fa-question-circle" style="color:#f59e0b;font-size:50px;"></i>
                   <h2>INCONCLUSIVE RESULT</h2>
@@ -496,11 +728,11 @@
                   <p>Please upload a clearer MRI image or consult a medical specialist.</p>
                 </div>
               `;
-            }
+              }
 
-            // History entry
-            const li = document.createElement("li");
-            li.innerHTML = `
+              // History entry
+              const li = document.createElement("li");
+              li.innerHTML = `
               <img src="${previewImage.src}" width="50" height="50">
               <div>
                 <strong>${prediction.tumor_type}</strong>
@@ -508,24 +740,24 @@
                 <small>${new Date().toLocaleTimeString()}</small>
               </div>
             `;
-            historyList.prepend(li);
+              historyList.prepend(li);
 
-            // ── Notify chatbot of new results ──────────────────
-            updateChatContext({
-              tumor_type:          prediction.tumor_type,
-              highest_confidence:  prediction.highest_confidence,
-              confidence:          prediction.confidence,
-              has_gradcam:         !!prediction.gradcam
-            });
-          })
-          .catch(err => {
-            console.error(err);
-            resultContent.innerHTML = `
+              // ── Notify chatbot of new results ──────────────────
+              updateChatContext({
+                tumor_type: prediction.tumor_type,
+                highest_confidence: prediction.highest_confidence,
+                confidence: prediction.confidence,
+                has_gradcam: !!prediction.gradcam,
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+              resultContent.innerHTML = `
               <i class="fas fa-exclamation-triangle" style="color:#ef4444;font-size:50px;"></i>
               <h3>Network Error</h3>
               <p>Please check your connection and try again</p>
             `;
-          });
+            });
         };
 
         reader.readAsDataURL(file);
@@ -535,37 +767,42 @@
       uploadBox.addEventListener("dragover", (e) => {
         e.preventDefault();
         uploadBox.style.borderColor = "#1e66ff";
-        uploadBox.style.background  = "#f0f6ff";
+        uploadBox.style.background = "#f0f6ff";
       });
       uploadBox.addEventListener("dragleave", () => {
         uploadBox.style.borderColor = "#9ec5ff";
-        uploadBox.style.background  = "transparent";
+        uploadBox.style.background = "transparent";
       });
       uploadBox.addEventListener("drop", (e) => {
         e.preventDefault();
         uploadBox.style.borderColor = "#9ec5ff";
-        uploadBox.style.background  = "transparent";
+        uploadBox.style.background = "transparent";
         if (e.dataTransfer.files.length) {
           imageInput.files = e.dataTransfer.files;
           imageInput.dispatchEvent(new Event("change"));
         }
       });
 
-
       // ════════════════════════════════════════════════════════════
       //  CHATBOT
       // ════════════════════════════════════════════════════════════
-      let chatOpen       = false;
-      let isBotTyping    = false;
-      let chatHistory    = [];      // {role, content}
-      let analysisCtx    = {};      // filled after each prediction
+      let chatOpen = false;
+      let isBotTyping = false;
+      let chatHistory = []; // {role, content}
+      let analysisCtx = {}; // filled after each prediction
 
       function toggleChat() {
         chatOpen = !chatOpen;
-        document.getElementById("chatbot-panel").style.display = chatOpen ? "flex" : "none";
-        document.getElementById("chat-icon").style.display    = chatOpen ? "none"  : "block";
-        document.getElementById("close-icon").style.display   = chatOpen ? "block" : "none";
-        document.getElementById("chat-badge").style.display   = "none";
+        document.getElementById("chatbot-panel").style.display = chatOpen
+          ? "flex"
+          : "none";
+        document.getElementById("chat-icon").style.display = chatOpen
+          ? "none"
+          : "block";
+        document.getElementById("close-icon").style.display = chatOpen
+          ? "block"
+          : "none";
+        document.getElementById("chat-badge").style.display = "none";
         if (chatOpen) document.getElementById("chat-input").focus();
       }
 
@@ -581,7 +818,7 @@
 
       function appendMsg(role, text) {
         const msgs = document.getElementById("chat-messages");
-        const div  = document.createElement("div");
+        const div = document.createElement("div");
         div.className = `chat-msg ${role}`;
         const formatted = text
           .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
@@ -594,7 +831,7 @@
 
       function showTyping() {
         const msgs = document.getElementById("chat-messages");
-        const div  = document.createElement("div");
+        const div = document.createElement("div");
         div.className = "chat-msg bot";
         div.id = "typing-row";
         div.innerHTML = `<div class="typing-dots"><span></span><span></span><span></span></div>`;
@@ -616,7 +853,7 @@
       async function sendMessage() {
         if (isBotTyping) return;
         const input = document.getElementById("chat-input");
-        const text  = input.value.trim();
+        const text = input.value.trim();
         if (!text) return;
 
         input.value = "";
@@ -630,42 +867,48 @@
         showTyping();
 
         try {
-          const res  = await fetch("/chat", {
+          const res = await fetch("/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               message: text,
               context: analysisCtx,
-              history: chatHistory.slice(-8)
-            })
+              history: chatHistory.slice(-8),
+            }),
           });
           const data = await res.json();
           hideTyping();
-          const reply = data.reply || data.error || "Sorry, something went wrong.";
+          const reply =
+            data.reply || data.error || "Sorry, something went wrong.";
           appendMsg("bot", reply);
           chatHistory.push({ role: "assistant", content: reply });
         } catch (err) {
           hideTyping();
-          appendMsg("bot", "⚠️ Network error. Please check your connection and try again.");
+          appendMsg(
+            "bot",
+            "⚠️ Network error. Please check your connection and try again.",
+          );
         }
 
         isBotTyping = false;
         document.getElementById("send-btn").disabled = false;
-        document.getElementById("chat-status").textContent = "Ask about your scan results";
+        document.getElementById("chat-status").textContent =
+          "Ask about your scan results";
       }
 
       // Called automatically after every successful /predict
       function updateChatContext(ctx) {
         analysisCtx = ctx;
 
-        // Show badge if panel is closed
+        // Auto-open chat panel if closed
         if (!chatOpen) {
-          document.getElementById("chat-badge").style.display = "block";
+          toggleChat();
         }
 
-        const msg = ctx.tumor_type === "No Tumor"
-          ? `✅ Scan complete — **No Tumor Detected** (${ctx.highest_confidence} confidence). Ask me anything about your results!`
-          : `🔍 Scan complete — **${ctx.tumor_type}** detected (${ctx.highest_confidence} confidence). I can explain the Grad-CAM heatmap or answer questions. Just ask!`;
+        const msg =
+          ctx.tumor_type === "No Tumor"
+            ? `✅ Scan complete — **No Tumor Detected** (${ctx.highest_confidence} confidence). Ask me anything about your results!`
+            : `🔍 Scan complete — **${ctx.tumor_type}** detected (${ctx.highest_confidence} confidence). I can explain the Grad-CAM heatmap or answer questions. Just ask!`;
 
         appendMsg("bot", msg);
         chatHistory.push({ role: "assistant", content: msg });
