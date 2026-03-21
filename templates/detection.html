@@ -79,85 +79,6 @@
         </div>
       </div>
     </section>
-<<<<<<< HEAD
-
-    <!-- Enhanced Grad-CAM Modal with 2-Panel Layout -->
-    <div id="gradcamModal" class="modal">
-      <div class="modal-content-large">
-        <span class="close">&times;</span>
-        <h2 class="modal-title">Grad-CAM Class Activation Mapping</h2>
-
-        <div class="gradcam-three-panel">
-          <!-- Panel 1: Raw Image -->
-          <div class="gradcam-panel">
-            <div class="panel-header">Raw Image</div>
-            <div class="panel-image-container">
-              <img id="rawImage" alt="Raw MRI" />
-            </div>
-            <div class="panel-info">
-              <div class="info-label">Actual Label</div>
-              <div class="info-value" id="actualLabel">Loading...</div>
-            </div>
-          </div>
-
-          <!-- Panel 2: Pure Heatmap -->
-          <div class="gradcam-panel">
-            <div class="panel-header">Class Activation Heatmap</div>
-            <div class="panel-image-container">
-              <img id="heatmapImage" alt="Pure Heatmap" />
-            </div>
-            <div class="panel-info">
-              <div class="info-label">Confidence</div>
-              <div class="info-value confidence" id="confidenceValue">
-                Loading...
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Grad-CAM Legend -->
-        <div class="gradcam-legend-enhanced">
-          <div class="legend-header">
-            <i class="fas fa-palette"></i> Activation Intensity Scale
-          </div>
-          <div class="legend-content">
-            <div class="legend-bar-gradient"></div>
-            <div class="legend-labels-enhanced">
-              <span>Low<br />Activation</span>
-              <span>Medium<br />Activation</span>
-              <span>High<br />Activation<br />(Tumor Region)</span>
-            </div>
-          </div>
-          <div class="legend-description">
-            Red/Yellow regions indicate areas with highest neural network
-            activation, suggesting tumor presence
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-      // DOM Elements
-      const uploadBox = document.getElementById("uploadBox");
-      const imageInput = document.getElementById("imageInput");
-      const previewImage = document.getElementById("previewImage");
-      const analyzeBtn = document.getElementById("analyzeBtn");
-      const outputBox = document.getElementById("outputBox");
-      const resultContent = document.getElementById("resultContent");
-      const historyList = document.getElementById("historyList");
-      const modal = document.getElementById("gradcamModal");
-      const closeModal = document.getElementsByClassName("close")[0];
-
-      // 2-Panel modal elements
-      const rawImage = document.getElementById("rawImage");
-      const heatmapImage = document.getElementById("heatmapImage");
-      const actualLabel = document.getElementById("actualLabel");
-      const confidenceValue = document.getElementById("confidenceValue");
-
-      let currentGradcamData = null;
-      let currentPrediction = null;
-=======
->>>>>>> 00ae94d (Chatbot added)
 
     <!-- Enhanced Grad-CAM Modal with 2-Panel Layout -->
     <div id="gradcamModal" class="modal">
@@ -478,57 +399,6 @@
         }
       });
 
-<<<<<<< HEAD
-      // Modal controls
-      closeModal.onclick = function () {
-        modal.style.display = "none";
-      };
-
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      };
-
-      function showGradcam() {
-        console.log("🎯 showGradcam called");
-        console.log("   currentGradcamData:", currentGradcamData);
-        console.log("   currentPrediction:", currentPrediction);
-
-        if (currentGradcamData && currentPrediction) {
-          // Check if gradcam data has the expected structure
-          if (currentGradcamData.heatmap) {
-            console.log("✅ Setting modal images...");
-            // Set images
-            rawImage.src = previewImage.src;
-            heatmapImage.src = currentGradcamData.heatmap;
-
-            // Set information
-            actualLabel.textContent = currentPrediction.tumor_type;
-            actualLabel.className =
-              currentPrediction.tumor_type === "No Tumor"
-                ? "info-value label-negative"
-                : "info-value label-positive";
-
-            confidenceValue.textContent = currentPrediction.highest_confidence;
-
-            console.log("✅ Opening modal");
-            modal.style.display = "block";
-          } else {
-            console.error(
-              "❌ Grad-CAM data structure is invalid:",
-              currentGradcamData,
-            );
-            alert("Grad-CAM visualization data is not in the expected format.");
-          }
-        } else {
-          console.error(
-            "❌ Missing data - gradcam:",
-            !!currentGradcamData,
-            "prediction:",
-            !!currentPrediction,
-          );
-=======
       // ── Modal ───────────────────────────────────────────────────
       closeModal.onclick = () => modal.style.display = "none";
       window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; };
@@ -543,16 +413,11 @@
           confidenceValue.textContent = currentPrediction.highest_confidence;
           modal.style.display = "block";
         } else {
->>>>>>> 00ae94d (Chatbot added)
           alert("Grad-CAM visualization is not available for this analysis.");
         }
       }
 
-<<<<<<< HEAD
-      // Send image to backend
-=======
       // ── Analyze ─────────────────────────────────────────────────
->>>>>>> 00ae94d (Chatbot added)
       analyzeBtn.addEventListener("click", detectTumor);
 
       function detectTumor() {
@@ -566,16 +431,9 @@
 
         reader.onload = () => {
           const base64String = reader.result;
-<<<<<<< HEAD
-          const payload = { image: [base64String] };
-
-          resultContent.innerHTML = `
-            <i class="fas fa-spinner fa-spin" style="font-size: 50px;"></i>
-=======
 
           resultContent.innerHTML = `
             <i class="fas fa-spinner fa-spin" style="font-size:50px;"></i>
->>>>>>> 00ae94d (Chatbot added)
             <h3>Analyzing MRI Scan...</h3>
             <p>Please wait while we process your image</p>
           `;
@@ -586,132 +444,6 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ image: [base64String] }),
           })
-<<<<<<< HEAD
-            .then((res) => res.json())
-            .then((data) => {
-              console.log("📥 Received data:", data);
-              console.log(
-                "📦 Full data structure:",
-                JSON.stringify(data, null, 2),
-              );
-
-              if (data.error) {
-                resultContent.innerHTML = `
-                  <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 50px;"></i>
-                  <h3>Error</h3>
-                  <p>${data.error}</p>
-                `;
-                return;
-              }
-
-              const prediction = data.predictions[0];
-              currentPrediction = prediction;
-              console.log("🔍 Prediction object:", prediction);
-              console.log("🔍 Tumor type:", prediction.tumor_type);
-              console.log("🔥 Grad-CAM data:", prediction.gradcam);
-              console.log("🔥 Grad-CAM type:", typeof prediction.gradcam);
-
-              if (prediction.gradcam) {
-                console.log(
-                  "🔥 Grad-CAM keys:",
-                  Object.keys(prediction.gradcam),
-                );
-                console.log("🔥 Has heatmap:", !!prediction.gradcam.heatmap);
-              }
-
-              const highestConfidence = parseFloat(
-                prediction.highest_confidence,
-              );
-              currentGradcamData = prediction.gradcam;
-
-              console.log("💾 Stored currentGradcamData:", currentGradcamData);
-
-              if (prediction.tumor_type === "No Tumor") {
-                outputBox.style.background = "#d1fae5";
-              } else {
-                outputBox.style.background = "#fee2e2";
-              }
-
-              if (highestConfidence >= 50) {
-                resultContent.innerHTML = `
-                  <div class="result-header ${prediction.tumor_type === "No Tumor" ? "no-tumor" : "tumor-detected"}">
-                    <i class="fas ${prediction.tumor_type === "No Tumor" ? "fa-check-circle" : "fa-exclamation-triangle"}"></i>
-                    <h2>${prediction.tumor_type.toUpperCase()}</h2>
-                    <div class="confidence-badge">
-                      Confidence: ${prediction.highest_confidence}
-                    </div>
-                  </div>
-                  <div class="result-message">
-                    ${
-                      prediction.tumor_type === "No Tumor"
-                        ? "✅ No tumor detected in the MRI scan."
-                        : `⚠️ <strong>${prediction.tumor_type}</strong> detected with high confidence. Please consult a medical professional.`
-                    }
-                  </div>
-                `;
-
-                // Add Grad-CAM button if tumor detected and gradcam available
-                console.log("🔥 Checking Grad-CAM data...");
-                console.log("   Tumor type:", prediction.tumor_type);
-                console.log("   Gradcam exists:", !!prediction.gradcam);
-                console.log("   Gradcam value:", prediction.gradcam);
-
-                if (
-                  prediction.gradcam &&
-                  prediction.tumor_type !== "No Tumor"
-                ) {
-                  console.log("✅ Creating Grad-CAM button");
-                  const gradcamBtn = document.createElement("button");
-                  gradcamBtn.className = "gradcam-btn";
-                  gradcamBtn.innerHTML = "View Activation Mapping";
-                  gradcamBtn.onclick = showGradcam;
-                  resultContent.appendChild(gradcamBtn);
-                  console.log("✅ Grad-CAM button added to DOM");
-                } else {
-                  console.log("⚠️ No Grad-CAM data available");
-                  console.log(
-                    "   Reason: gradcam=" +
-                      !!prediction.gradcam +
-                      ", tumor=" +
-                      prediction.tumor_type,
-                  );
-                }
-              } else {
-                outputBox.style.background = "#fef3c7";
-                resultContent.innerHTML = `
-                  <div class="result-header low-confidence">
-                    <i class="fas fa-question-circle" style="color: #f59e0b; font-size: 50px;"></i>
-                    <h2>INCONCLUSIVE RESULT</h2>
-                    <div class="confidence-badge low">
-                      Confidence: ${prediction.highest_confidence}
-                    </div>
-                  </div>
-                  <div class="result-message">
-                    <p>⚠️ Analysis confidence is below threshold (${prediction.highest_confidence} &lt; 50%).</p>
-                    <p>Please upload a clearer MRI image or consult with a medical specialist.</p>
-                  </div>
-                `;
-              }
-
-              const li = document.createElement("li");
-              li.innerHTML = `
-                <img src="${previewImage.src}" width="50" height="50">
-                <div>
-                  <strong>${prediction.tumor_type}</strong>
-                  <span>${prediction.highest_confidence}</span>
-                  <small>${new Date().toLocaleTimeString()}</small>
-                </div>
-              `;
-              historyList.prepend(li);
-            })
-            .catch((err) => {
-              console.error(err);
-              resultContent.innerHTML = `
-                <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 50px;"></i>
-                <h3>Network Error</h3>
-                <p>Please check your connection and try again</p>
-              `;
-=======
           .then(res => res.json())
           .then(data => {
             if (data.error) {
@@ -784,7 +516,6 @@
               highest_confidence:  prediction.highest_confidence,
               confidence:          prediction.confidence,
               has_gradcam:         !!prediction.gradcam
->>>>>>> 00ae94d (Chatbot added)
             });
           })
           .catch(err => {
