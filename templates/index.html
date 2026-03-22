@@ -4,195 +4,337 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NeuroVision:MRI Based Tumor Analysis</title>
-    <link rel="icon" href="{{ url_for('static', filename='fav.jpg') }}" />
+
+    <!-- CSS Links -->
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='home.css') }}"
+      href="{{ url_for('static', filename='auth.css') }}"
     />
-    <!-- Font Awesome for icons -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link rel="icon" href="{{ url_for('static', filename='fav.jpg') }}" />
+
+    <!-- Fallback CSS if main file fails -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f8ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+    </style>
   </head>
 
   <body>
-    <!-- HEADER - MATCHING DETECTION PAGE STYLE -->
-    <header class="header">
-      <div class="logo">
-        <i class="fa-solid fa-brain"></i>
-      </div>
-      <div class="header-text">
-        <h1>NeurVision: MRI Based Tumor Analysis</h1>
-      </div>
-      <nav class="nav-links">
-        <a href="{{ url_for('home') }}" class="active">Home</a>
-        <a href="{{ url_for('detection') }}">Detection</a>
-        <a href="{{ url_for('logout') }}" class="logout-btn">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-      </nav>
-    </header>
-
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1>EMPOWERING DOCTORS WITH<br />INTELLIGENT DIAGNOSTICS</h1>
-        <p>
-          Advanced AI technology that analyzes brain MRI scans in seconds,
-          supporting faster and more confident clinical decisions.
-        </p>
-      </div>
-    </section>
-
-    <!-- INFO SECTION -->
-    <section class="info-section">
-      <!-- ABOUT BRAIN TUMOR -->
-      <div class="info-box">
-        <div class="info-left">
-          <img
-            src="{{ url_for('static', filename='brain.jpeg') }}"
-            alt="Brain Tumor"
-          />
+    <div class="medical-container">
+      <div class="content-wrapper">
+        <!-- Left Welcome Panel -->
+        <div class="welcome-panel">
+          <div class="welcome-content">
+            <h2>Welcome to NeuroVision</h2>
+            <p>AI-Powered Brain Tumor Detection System</p>
+            <div class="welcome-icon"><i class="fas fa-stethoscope"></i></div>
+          </div>
         </div>
-        <div class="info-right">
-          <h2>About Brain Tumors</h2>
 
-          <p class="short-text">
-            A brain tumor is an abnormal growth of cells inside the brain or
-            surrounding tissues. Early diagnosis plays a critical role in
-            treatment success.
-          </p>
+        <!-- Right Form Section -->
+        <div class="form-section">
+          <!-- Form Tabs -->
+          <div class="form-tabs">
+            <a href="#login" class="tab-btn active"
+              ><i class="fas fa-sign-in-alt"></i> Login</a
+            >
+            <a href="#register" class="tab-btn"
+              ><i class="fas fa-user-plus"></i> Register</a
+            >
+          </div>
 
-          <p class="more-text">
-            <strong>Definition:</strong> A brain tumor occurs when abnormal
-            cells grow uncontrollably within the brain or nearby structures.
-            Tumors can be <strong>primary</strong> (originating in the brain) or
-            <strong>secondary</strong> (metastatic, spreading from other
-            organs). <br /><br />
+          <div class="forms-container">
+            <!-- LOGIN FORM -->
+            <form
+              method="POST"
+              action="{{ url_for('login') }}"
+              class="form active"
+              id="login"
+            >
+              {% if error %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+              </div>
+              {% endif %}
 
-            <strong>Types of Brain Tumors:</strong><br />
-            • <strong>Gliomas:</strong> Develop from glial cells and include
-            astrocytoma, oligodendroglioma, and glioblastoma.<br />
-            • <strong>Meningiomas:</strong> Arise from the meninges; usually
-            benign and slow-growing.<br />
-            • <strong>Pituitary Tumors:</strong> Affect hormone production and
-            gland function.<br />
-            • <strong>Pineal Tumors:</strong> Rare tumors near the pineal
-            gland.<br /><br />
+              <div class="input-group">
+                <div class="input-icon"><i class="fas fa-envelope"></i></div>
+                <input
+                  type="email"
+                  name="username"
+                  placeholder="Email Address"
+                  required
+                  autocomplete="email"
+                />
+              </div>
 
-            Tumors are graded by the World Health Organization (Grade I–IV)
-            based on aggressiveness. Deep learning models applied to MRI images
-            can classify tumor types with high accuracy, supporting faster
-            diagnosis and treatment planning.
-          </p>
+              <div class="input-group">
+                <div class="input-icon"><i class="fas fa-lock"></i></div>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                  autocomplete="current-password"
+                />
+              </div>
 
-          <button class="see-more">See More</button>
+              <div class="form-options">
+                <label class="checkbox-label">
+                  <input type="checkbox" name="remember" />
+                  <span>Remember me</span>
+                </label>
+                <a href="#" class="link-text">Forgot password?</a>
+              </div>
+
+              <button type="submit" class="submit-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+              </button>
+
+              <div class="form-footer">
+                <p>
+                  Don't have an account?
+                  <a href="#register" class="switch-form">Register here</a>
+                </p>
+              </div>
+            </form>
+
+            <!-- REGISTER FORM -->
+            <form
+              method="POST"
+              action="{{ url_for('login') }}"
+              class="form"
+              id="register"
+            >
+              {% if register_error %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i> {{ register_error }}
+              </div>
+              {% endif %} {% if success_message %}
+              <div class="success-message">
+                <i class="fas fa-check-circle"></i> {{ success_message }}
+              </div>
+              {% endif %}
+
+              <!-- Add this CSS to auth.css or in style tag -->
+              <style>
+                .success-message {
+                  background: #d4edda;
+                  color: #155724;
+                  padding: 12px;
+                  border-radius: 6px;
+                  margin-bottom: 20px;
+                  border-left: 4px solid #28a745;
+                  display: flex;
+                  align-items: center;
+                  gap: 10px;
+                }
+
+                .success-message i {
+                  font-size: 18px;
+                }
+              </style>
+
+              <div class="input-group">
+                <div class="input-icon"><i class="fas fa-user"></i></div>
+                <input
+                  type="text"
+                  name="fullname"
+                  placeholder="Full Name"
+                  required
+                  autocomplete="name"
+                />
+              </div>
+
+              <div class="input-group">
+                <div class="input-icon"><i class="fas fa-envelope"></i></div>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+
+              <div class="input-group">
+                <div class="input-icon"><i class="fas fa-lock"></i></div>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password (minimum 6 characters)"
+                  required
+                  minlength="6"
+                  autocomplete="new-password"
+                />
+              </div>
+
+              <div class="input-group">
+                <div class="input-icon"><i class="fas fa-lock"></i></div>
+                <input
+                  type="password"
+                  name="confirm_password"
+                  placeholder="Confirm Password"
+                  required
+                  autocomplete="new-password"
+                />
+              </div>
+
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" name="terms" required />
+                  <span>I agree to the Terms & Conditions</span>
+                </label>
+              </div>
+
+              <button type="submit" class="submit-btn">
+                <i class="fas fa-user-plus"></i> Register
+              </button>
+
+              <div class="form-footer">
+                <p>
+                  Already have an account?
+                  <a href="#login" class="switch-form">Login here</a>
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- SIGNS & SYMPTOMS -->
-      <div class="info-box reverse">
-        <div class="info-left">
-          <img
-            src="{{ url_for('static', filename='sign.jpeg') }}"
-            alt="Symptoms"
-          />
-        </div>
-        <div class="info-right">
-          <h2>Signs & Symptoms</h2>
-
-          <p class="short-text">
-            Symptoms depend on tumor size, type, and location within the brain.
-            Some symptoms develop gradually, while others appear suddenly.
-          </p>
-
-          <p class="more-text">
-            Common signs and symptoms of brain tumors include persistent or
-            worsening headaches, especially in the morning, seizures, nausea or
-            vomiting, blurred or double vision, and difficulty with balance or
-            coordination. Patients may also experience weakness or numbness in
-            the arms or legs, speech difficulties, memory problems, confusion,
-            personality changes, or hearing loss.
-          </p>
-
-          <button class="see-more">See More</button>
-        </div>
-      </div>
-
-      <!-- HOW SYSTEM WORKS -->
-      <div class="info-box">
-        <div class="info-left">
-          <img
-            src="{{ url_for('static', filename='AI.jpeg') }}"
-            alt="AI System"
-          />
-        </div>
-        <div class="info-right">
-          <h2>How the System Works</h2>
-
-          <p class="short-text">
-            NeuroVision uses artificial intelligence to assist doctors in brain
-            tumor detection through MRI analysis.
-          </p>
-
-          <p class="more-text">
-            The NeuroVision system allows users to upload MRI brain images
-            through a secure web interface. The uploaded image undergoes
-            preprocessing such as resizing and normalization before being passed
-            to a trained deep learning model (VGG). The model analyzes the MRI
-            scan to detect abnormal patterns and predicts whether a tumor is
-            present. The system outputs the predicted tumor class along with a
-            confidence score, helping clinicians make informed decisions.
-          </p>
-
-          <button class="see-more">See More</button>
-        </div>
-      </div>
-
-      <!-- GET STARTED BUTTON -->
-      <div class="cta-section">
-        <h2>Ready to Start Diagnosis?</h2>
-        <p>Use our AI-powered detection tool to analyze MRI scans</p>
-        <a href="{{ url_for('detection') }}" class="cta-button">
-          <i class="fas fa-magnifying-glass"></i> Go to Detection Tool
-        </a>
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-      <h2>NeuroVision</h2>
-      <p>© 2025 NeuroVision. For medical professional use only.</p>
-      <p class="footer-note">
-        <i class="fas fa-lock"></i> Secure AI Diagnostic Platform
-      </p>
-    </footer>
-
-    <!-- SCRIPT -->
+    <!-- JavaScript for Form Switching -->
     <script>
-      // Intersection Observer for animations
-      const boxes = document.querySelectorAll(".info-box");
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            entry.target.classList.toggle("show", entry.isIntersecting);
-          });
-        },
-        { threshold: 0.2 },
-      );
-      boxes.forEach((box) => observer.observe(box));
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("NeuroVision Login Page Loaded");
 
-      // See More/Less buttons
-      const buttons = document.querySelectorAll(".see-more");
-      buttons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const moreText = btn.previousElementSibling;
-          moreText.classList.toggle("show");
-          btn.textContent =
-            btn.textContent === "See More" ? "See Less" : "See More";
+        // Tab switching
+        const tabBtns = document.querySelectorAll(".tab-btn");
+        const forms = document.querySelectorAll(".form");
+        const switchLinks = document.querySelectorAll(".switch-form");
+
+        // Function to switch forms
+        function switchForm(targetId) {
+          // Update active tab
+          tabBtns.forEach((btn) => {
+            btn.classList.remove("active");
+            if (btn.getAttribute("href") === "#" + targetId) {
+              btn.classList.add("active");
+            }
+          });
+
+          // Show target form
+          forms.forEach((form) => {
+            form.classList.remove("active");
+            if (form.id === targetId) {
+              form.classList.add("active");
+            }
+          });
+
+          // Scroll to top of form
+          document.querySelector(".form-section").scrollTop = 0;
+        }
+
+        // Tab button clicks
+        tabBtns.forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("href").substring(1);
+            switchForm(targetId);
+          });
         });
+
+        // Switch form links
+        switchLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("href").substring(1);
+            switchForm(targetId);
+          });
+        });
+
+        // Form validation
+        const registerForm = document.getElementById("register");
+        if (registerForm) {
+          registerForm.addEventListener("submit", function (e) {
+            const password = this.querySelector('input[name="password"]').value;
+            const confirmPassword = this.querySelector(
+              'input[name="confirm_password"]',
+            ).value;
+            const terms = this.querySelector('input[name="terms"]').checked;
+
+            if (password.length < 6) {
+              alert("❌ Password must be at least 6 characters");
+              e.preventDefault();
+              return false;
+            }
+
+            if (password !== confirmPassword) {
+              alert("❌ Passwords do not match");
+              e.preventDefault();
+              return false;
+            }
+
+            if (!terms) {
+              alert("❌ You must agree to the Terms & Conditions");
+              e.preventDefault();
+              return false;
+            }
+
+            // Show loading state
+            const submitBtn = this.querySelector(".submit-btn");
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML =
+              '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            submitBtn.disabled = true;
+
+            // Re-enable after 5 seconds if submission fails
+            setTimeout(() => {
+              submitBtn.innerHTML = originalText;
+              submitBtn.disabled = false;
+            }, 5000);
+          });
+        }
+
+        // Login form loading state
+        const loginForm = document.getElementById("login");
+        if (loginForm) {
+          loginForm.addEventListener("submit", function (e) {
+            const submitBtn = this.querySelector(".submit-btn");
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML =
+              '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+            submitBtn.disabled = true;
+
+            // Re-enable after 5 seconds if submission fails
+            setTimeout(() => {
+              submitBtn.innerHTML = originalText;
+              submitBtn.disabled = false;
+            }, 5000);
+          });
+        }
+
+        // Check URL hash on page load
+        const hash = window.location.hash.substring(1);
+        if (hash === "register" || hash === "login") {
+          switchForm(hash);
+        }
       });
     </script>
   </body>
