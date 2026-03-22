@@ -18,7 +18,7 @@ app.secret_key = "neurovision_secret_key_2024_prod_12345"
 # -----------------------------
 # Gemini API Config (FREE)
 # -----------------------------
-GEMINI_API_KEY = "add your api key here"
+GEMINI_API_KEY = "insert your api key"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
 
 # -----------------------------
@@ -333,31 +333,31 @@ def login():
             
             # Validation
             if not all([name, email, password, confirm_password]):
-                return render_template("login.html", 
+                return render_template("index.html", 
                     register_error="All fields are required")
             
             if not validate_email(email):
-                return render_template("login.html", 
+                return render_template("index.html", 
                     register_error="Please enter a valid email address")
             
             is_valid, msg = validate_password(password)
             if not is_valid:
-                return render_template("login.html", 
+                return render_template("index.html", 
                     register_error=msg)
             
             if password != confirm_password:
-                return render_template("login.html", 
+                return render_template("index.html", 
                     register_error="Passwords do not match")
             
             if not terms:
-                return render_template("login.html", 
+                return render_template("index.html", 
                     register_error="You must agree to the Terms & Conditions")
             
             # Check if user exists
             users = load_users()
             
             if email in users:
-                return render_template("login.html", 
+                return render_template("index.html", 
                     register_error="Email already registered")
             
             # Create new user
@@ -372,7 +372,7 @@ def login():
             
             print(f"✅ New user registered: {email}")
             
-            return render_template("login.html", 
+            return render_template("index.html", 
                 success_message="Registration successful! Please login with your credentials.")
         
         else:  # This is a LOGIN form
@@ -380,11 +380,11 @@ def login():
             password = request.form.get("password", "").strip()
             
             if not email or not password:
-                return render_template("login.html", 
+                return render_template("index.html", 
                     error="Please enter both email and password")
             
             if not validate_email(email):
-                return render_template("login.html", 
+                return render_template("index.html", 
                     error="Please enter a valid email address")
             
             users = load_users()
@@ -399,13 +399,13 @@ def login():
                     print(f"✅ User '{email}' logged in successfully")
                     return redirect(url_for("home"))
                 else:
-                    return render_template("login.html", 
+                    return render_template("index.html", 
                         error="Invalid email or password")
             else:
-                return render_template("login.html", 
+                return render_template("index.html", 
                     error="Account not found. Please register first.")
     
-    return render_template("login.html")
+    return render_template("index.html")
 
 @app.route("/home")
 def home():
