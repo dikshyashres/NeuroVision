@@ -321,7 +321,10 @@ body {
   box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
 }
 
-/* Modal */
+/* ============================================================
+   MODAL — fits entirely in one viewport, no scroll needed
+   ============================================================ */
+
 .modal {
   display: none;
   position: fixed;
@@ -330,9 +333,16 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
   background-color: rgba(0, 0, 0, 0.85);
   animation: fadeIn 0.3s;
+  align-items: center;
+  justify-content: center;
+}
+
+/* When JS sets display:block, override to flex */
+.modal[style*="block"] {
+  display: flex !important;
 }
 
 @keyframes fadeIn {
@@ -344,13 +354,18 @@ body {
   }
 }
 
-/* Enhanced Large Modal Content */
+/* Modal box */
 .modal-content-large {
   background-color: white;
-  margin: 2% auto;
-  padding: 40px;
+  margin: 0;
+  padding: 22px 28px 18px;
   border-radius: 20px;
-  max-width: 1000px;
+  width: 92%;
+  max-width: 920px;
+  max-height: 92vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   animation: slideDown 0.3s;
   position: relative;
@@ -358,7 +373,7 @@ body {
 
 @keyframes slideDown {
   from {
-    transform: translateY(-50px);
+    transform: translateY(-40px);
     opacity: 0;
   }
   to {
@@ -367,33 +382,36 @@ body {
   }
 }
 
+/* Title row */
 .modal-title {
   color: #1e3a8a;
-  margin-bottom: 30px;
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 28px;
+  font-size: 21px;
   font-weight: 600;
   text-align: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .modal-title i {
   color: #f59e0b;
-  font-size: 32px;
+  font-size: 26px;
 }
 
+/* Close button */
 .close {
   color: #aaa;
   position: absolute;
-  right: 30px;
-  top: 30px;
-  font-size: 32px;
+  right: 22px;
+  top: 18px;
+  font-size: 28px;
   font-weight: bold;
   cursor: pointer;
   transition: color 0.3s;
-  line-height: 20px;
+  line-height: 1;
 }
 
 .close:hover,
@@ -401,52 +419,61 @@ body {
   color: #000;
 }
 
-/* 2-Panel Grad-CAM Layout */
+/* ── Two-panel grid ── */
 .gradcam-three-panel {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-  margin-bottom: 30px;
+  gap: 18px;
+  margin-bottom: 14px;
+  flex: 1;
+  min-height: 0;
 }
 
 .gradcam-panel {
   background: #f8fbff;
   border-radius: 16px;
-  padding: 20px;
+  padding: 14px 16px;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .gradcam-panel:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .panel-header {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 600;
   color: #1e3a8a;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 2px solid #e0e7ff;
+  flex-shrink: 0;
 }
 
+/* Image container grows to fill available height */
 .panel-image-container {
   background: #000;
   border-radius: 12px;
-  padding: 10px;
-  margin-bottom: 15px;
-  min-height: 280px;
+  padding: 8px;
+  flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .panel-image-container img {
   width: 100%;
+  height: 100%;
   max-width: 100%;
-  height: auto;
   border-radius: 8px;
   object-fit: contain;
 }
@@ -454,21 +481,21 @@ body {
 .panel-info {
   background: white;
   border-radius: 10px;
-  padding: 15px;
-  margin-top: 15px;
+  padding: 10px 14px;
+  flex-shrink: 0;
 }
 
 .info-label {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .info-value {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
   color: #1e3a8a;
 }
@@ -476,43 +503,46 @@ body {
 .info-value.label-positive {
   color: #dc2626;
   background: #fee2e2;
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 8px;
+  display: inline-block;
 }
 
 .info-value.label-negative {
   color: #059669;
   background: #d1fae5;
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 8px;
+  display: inline-block;
 }
 
 .info-value.probability {
   color: #f59e0b;
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .info-value.confidence {
   color: #1e66ff;
-  font-size: 24px;
+  font-size: 22px;
 }
 
-/* Enhanced Grad-CAM Legend */
+/* ── Legend — always visible at the bottom ── */
 .gradcam-legend-enhanced {
   background: linear-gradient(135deg, #f8fbff 0%, #e0e7ff 100%);
-  padding: 25px;
-  border-radius: 16px;
+  padding: 14px 20px;
+  border-radius: 14px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
 }
 
 .legend-header {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   color: #1e3a8a;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
 }
 
@@ -521,11 +551,11 @@ body {
 }
 
 .legend-content {
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 }
 
 .legend-bar-gradient {
-  height: 40px;
+  height: 26px;
   background: linear-gradient(
     to right,
     #000080 0%,
@@ -537,14 +567,14 @@ body {
     #ff0000 100%
   );
   border-radius: 8px;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 .legend-labels-enhanced {
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #1e3a8a;
   text-align: center;
@@ -557,14 +587,17 @@ body {
 
 .legend-description {
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #64748b;
   font-style: italic;
-  padding-top: 15px;
+  padding-top: 8px;
+  margin-top: 6px;
   border-top: 1px solid #cbd5e1;
 }
 
-/* History Section */
+/* ============================================================
+   HISTORY SECTION
+   ============================================================ */
 .history-section {
   margin-top: auto;
   padding-top: 20px;
@@ -615,16 +648,18 @@ body {
   color: #64748b;
 }
 
-/* Responsive Design */
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 @media (max-width: 1400px) {
   .gradcam-three-panel {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
   }
 
   .modal-content-large {
-    max-width: 95%;
-    padding: 30px 20px;
+    width: 95%;
+    padding: 18px 18px 14px;
   }
 }
 
@@ -646,13 +681,19 @@ body {
     justify-content: center;
   }
 
+  /* Stack panels vertically on tablet — allow inner scroll for modal only */
+  .gradcam-three-panel {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
   .modal-content-large {
-    margin: 5% 10px;
-    padding: 25px 15px;
+    max-height: 95vh;
+    overflow-y: auto;
   }
 
   .modal-title {
-    font-size: 22px;
+    font-size: 18px;
   }
 }
 
@@ -680,7 +721,7 @@ body {
   }
 
   .panel-image-container {
-    min-height: 200px;
+    min-height: 160px;
   }
 
   .legend-labels-enhanced {
