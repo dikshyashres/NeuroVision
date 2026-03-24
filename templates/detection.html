@@ -135,9 +135,7 @@
       </div>
     </div>
 
-    <!-- ============================================================
-         CHATBOT WIDGET
-         ============================================================ -->
+    <!-- CHATBOT WIDGET -->
 
     <!-- Floating Toggle Button -->
     <button
@@ -281,9 +279,7 @@
       </div>
     </div>
 
-    <!-- ============================================================
-         CHATBOT STYLES
-         ============================================================ -->
+    <!--  CHATBOT STYLES -->
     <style>
       /* Toggle button */
       #chatbot-toggle {
@@ -578,11 +574,8 @@
       }
     </style>
 
-    <!-- ============================================================
-         DETECTION + CHATBOT JAVASCRIPT
-         ============================================================ -->
+    <!--DETECTION + CHATBOT JAVASCRIPT -->
     <script>
-      // ── Detection DOM refs ──────────────────────────────────────
       const uploadBox = document.getElementById("uploadBox");
       const imageInput = document.getElementById("imageInput");
       const previewImage = document.getElementById("previewImage");
@@ -715,6 +708,13 @@
                   gradcamBtn.onclick = showGradcam;
                   resultContent.appendChild(gradcamBtn);
                 }
+
+                const reportBtn = document.createElement("button");
+                reportBtn.className = "report-btn";
+                reportBtn.innerHTML =
+                  '<i class="fas fa-file-medical"></i> Generate Report';
+                reportBtn.onclick = openReport;
+                resultContent.appendChild(reportBtn);
               } else {
                 outputBox.style.background = "#fef3c7";
                 resultContent.innerHTML = `
@@ -728,6 +728,13 @@
                   <p>Please upload a clearer MRI image or consult a medical specialist.</p>
                 </div>
               `;
+
+                const reportBtnLow = document.createElement("button");
+                reportBtnLow.className = "report-btn";
+                reportBtnLow.innerHTML =
+                  '<i class="fas fa-file-medical"></i> Generate Report';
+                reportBtnLow.onclick = openReport;
+                resultContent.appendChild(reportBtnLow);
               }
 
               // History entry
@@ -912,6 +919,278 @@
 
         appendMsg("bot", msg);
         chatHistory.push({ role: "assistant", content: msg });
+      }
+    </script>
+
+    <!-- AUTO REPORT MODAL-->
+    <div id="reportModal">
+      <div class="report-content" id="printableReport">
+        <!-- Header Band -->
+        <div class="report-header-band">
+          <div class="report-brand">
+            <div class="report-brand-icon">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <div class="report-brand-text">
+              <h2>NeuroBot</h2>
+              <p>MRI-Based Tumor Detection System</p>
+            </div>
+          </div>
+          <div class="report-meta-right">
+            <strong>Diagnostic Report</strong><br />
+            <span id="rpt-date"></span><br />
+            <span id="rpt-time"></span>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="report-body">
+          <!-- Case Info Row -->
+          <div class="report-case-row">
+            <div class="report-case-cell">
+              <div class="cell-label">Case / Patient ID</div>
+              <div class="cell-value" id="rpt-case-id">—</div>
+            </div>
+            <div class="report-case-cell">
+              <div class="cell-label">Scan Type</div>
+              <div class="cell-value">Brain MRI</div>
+            </div>
+            <div class="report-case-cell">
+              <div class="cell-label">Analysis Engine</div>
+              <div class="cell-value">VGG16 (Deep CNN)</div>
+            </div>
+          </div>
+
+          <!-- MRI Images -->
+          <div class="report-section-heading">
+            <i class="fas fa-image"></i> MRI Scan Images
+          </div>
+          <div class="report-images-grid" id="rpt-images-grid">
+            <div class="report-img-box">
+              <div class="img-box-label">Uploaded MRI Scan</div>
+              <img id="rpt-mri-img" src="" alt="MRI Scan" />
+            </div>
+            <div class="report-img-box" id="rpt-gradcam-box">
+              <div class="img-box-label">Grad-CAM Activation Heatmap</div>
+              <img id="rpt-gradcam-img" src="" alt="Grad-CAM Heatmap" />
+            </div>
+          </div>
+
+          <!-- Diagnosis -->
+          <div class="report-section-heading">
+            <i class="fas fa-stethoscope"></i> AI Diagnosis
+          </div>
+          <div class="report-diagnosis-block">
+            <div class="report-diag-row">
+              <div class="report-diag-type">
+                <div class="diag-icon" id="rpt-diag-icon">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div>
+                  <div class="diag-label">Predicted Tumor Type</div>
+                  <div class="diag-value" id="rpt-tumor-type">—</div>
+                </div>
+              </div>
+              <div style="text-align: right">
+                <div
+                  class="diag-label"
+                  style="
+                    font-size: 11px;
+                    color: #64748b;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.4px;
+                    margin-bottom: 4px;
+                  "
+                >
+                  Top Confidence
+                </div>
+                <div
+                  style="font-size: 28px; font-weight: 800; color: #1e66ff"
+                  id="rpt-top-conf"
+                >
+                  —
+                </div>
+              </div>
+            </div>
+            <div class="report-conf-bars" id="rpt-conf-bars"></div>
+          </div>
+
+          <!-- Clinical Summary -->
+          <div class="report-section-heading">
+            <i class="fas fa-notes-medical"></i> Clinical Summary
+          </div>
+          <div class="report-explanation" id="rpt-explanation"></div>
+
+          <!-- Grad-CAM note -->
+          <div id="rpt-gradcam-note" style="display: none; margin-bottom: 20px">
+            <div class="report-section-heading">
+              <i class="fas fa-fire"></i> Grad-CAM Interpretation
+            </div>
+            <div class="report-explanation">
+              The Grad-CAM heatmap highlights the MRI regions that most
+              influenced the model's prediction.
+              <strong>Red / yellow areas</strong> indicate high neural network
+              activation where the AI focused when identifying the tumor.
+              <strong>Blue / green areas</strong> indicate low activation with
+              minimal influence on the prediction.
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <div class="report-disclaimer">
+            <i class="fas fa-triangle-exclamation"></i>
+            <span
+              ><strong>Medical Disclaimer:</strong> This report is generated by
+              an AI-assisted diagnostic tool and is for informational purposes
+              only. It does <strong>not</strong> constitute a medical diagnosis.
+              Always consult a qualified medical professional or radiologist for
+              clinical evaluation and treatment decisions.</span
+            >
+          </div>
+        </div>
+        <!-- /report-body -->
+      </div>
+      <!-- /printableReport -->
+
+      <!-- Action bar (not printed) -->
+      <div class="report-action-bar">
+        <button class="btn-close-report" onclick="closeReport()">
+          <i class="fas fa-times"></i> Close
+        </button>
+        <button class="btn-save-pdf" onclick="saveReportPDF()">
+          <i class="fas fa-file-pdf"></i> Save as PDF
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const TUMOR_EXPLANATIONS = {
+        Glioma:
+          "Glioma is a tumor that originates in the glial cells of the brain or spinal cord. It is the most common type of primary brain tumor. Gliomas can be low-grade (slow-growing) or high-grade (aggressive). Symptoms may include headaches, seizures, memory loss, and personality changes. Treatment typically involves surgery, radiation, and chemotherapy.",
+        Meningioma:
+          "Meningioma is a tumor that arises from the meninges the membranes surrounding the brain and spinal cord. Most meningiomas are benign and slow-growing. They are more common in women and older adults. Treatment depends on size and location but often involves surgical removal or radiation therapy. Many small meningiomas may only require monitoring.",
+        Pituitary:
+          "A pituitary tumor (pituitary adenoma) forms in the pituitary gland at the base of the brain. Most are benign and slow-growing. They can affect hormone production, causing symptoms such as vision changes, headaches, fatigue, or unusual growth patterns. Treatment includes medication, surgery (transsphenoidal approach), or radiation therapy.",
+        "No Tumor":
+          "No tumor was detected in the provided MRI scan by the AI model. The brain tissue appears within normal parameters based on the analysis. However, this result does not replace a clinical evaluation. If symptoms persist, a radiologist's review and further imaging may still be recommended.",
+      };
+
+      function generateCaseID() {
+        const prefix = "NV";
+        const timestamp = Date.now().toString(36).toUpperCase();
+        const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+        return `${prefix}-${timestamp}-${random}`;
+      }
+
+      function openReport() {
+        if (!currentPrediction) {
+          alert("Please run an analysis first.");
+          return;
+        }
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        const timeStr = now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+        const caseID = generateCaseID();
+
+        document.getElementById("rpt-date").textContent = dateStr;
+        document.getElementById("rpt-time").textContent = timeStr;
+        document.getElementById("rpt-case-id").textContent = caseID;
+
+        document.getElementById("rpt-mri-img").src = previewImage.src;
+
+        const gradcamBox = document.getElementById("rpt-gradcam-box");
+        const gradcamNote = document.getElementById("rpt-gradcam-note");
+        const imagesGrid = document.getElementById("rpt-images-grid");
+
+        if (
+          currentGradcamData &&
+          currentGradcamData.heatmap &&
+          currentPrediction.tumor_type !== "No Tumor"
+        ) {
+          document.getElementById("rpt-gradcam-img").src =
+            currentGradcamData.heatmap;
+          gradcamBox.style.display = "block";
+          gradcamNote.style.display = "block";
+          imagesGrid.style.gridTemplateColumns = "1fr 1fr";
+        } else {
+          gradcamBox.style.display = "none";
+          gradcamNote.style.display = "none";
+          imagesGrid.style.gridTemplateColumns = "1fr";
+        }
+
+        const tumorType = currentPrediction.tumor_type;
+        document.getElementById("rpt-tumor-type").textContent = tumorType;
+        document.getElementById("rpt-top-conf").textContent =
+          currentPrediction.highest_confidence;
+
+        const iconEl = document.getElementById("rpt-diag-icon");
+        if (tumorType === "No Tumor") {
+          iconEl.className = "diag-icon no-tumor";
+          iconEl.innerHTML = '<i class="fas fa-check-circle"></i>';
+        } else {
+          iconEl.className = "diag-icon tumor";
+          iconEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        }
+
+        const barsContainer = document.getElementById("rpt-conf-bars");
+        barsContainer.innerHTML = "";
+        const confData = currentPrediction.confidence || {};
+        const highest = currentPrediction.highest_confidence;
+
+        Object.entries(confData).forEach(([cls, pct]) => {
+          if (cls !== tumorType) return; // ← only show detected tumor
+          const val = parseFloat(pct);
+          const row = document.createElement("div");
+          row.className = "conf-bar-row";
+          row.innerHTML = `
+    <span class="conf-bar-label">${cls}</span>
+    <div class="conf-bar-track">
+      <div class="conf-bar-fill highest" style="width:${val}%"></div>
+    </div>
+    <span class="conf-bar-pct">${pct}</span>
+  `;
+          barsContainer.appendChild(row);
+        });
+
+        document.getElementById("rpt-explanation").textContent =
+          TUMOR_EXPLANATIONS[tumorType] ||
+          "No explanation available for this prediction.";
+
+        document.getElementById("reportModal").style.display = "block";
+      }
+
+      function closeReport() {
+        document.getElementById("reportModal").style.display = "none";
+      }
+
+      document
+        .getElementById("reportModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeReport();
+        });
+
+      function saveReportPDF() {
+        // Ensure modal is in a clean state for @media print
+        const modal = document.getElementById("reportModal");
+        const prevDisplay = modal.style.display;
+        const prevBg = modal.style.background;
+        modal.style.display = "block";
+        modal.style.background = "white";
+        setTimeout(() => {
+          window.print();
+          modal.style.display = prevDisplay;
+          modal.style.background = prevBg;
+        }, 100);
       }
     </script>
   </body>

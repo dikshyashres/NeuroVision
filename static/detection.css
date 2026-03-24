@@ -749,3 +749,928 @@ body {
   object-fit: contain;
   margin: 0 auto;
 }
+/* ============================================================
+   REPORT MODAL STYLES — append to detection.css
+   ============================================================ */
+
+/* Report Button */
+.report-btn {
+  background: linear-gradient(135deg, #1e66ff 0%, #0047cc 100%);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.report-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(30, 102, 255, 0.35);
+}
+
+/* Report Modal */
+#reportModal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.85);
+  animation: fadeIn 0.3s;
+}
+
+#reportModal[style*="block"] {
+  display: flex !important;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 30px 20px;
+}
+
+/* Report Content (the printable card) */
+.report-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 780px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  font-family: "Segoe UI", sans-serif;
+  animation: slideDown 0.3s;
+  position: relative;
+}
+
+/* Report Header Band */
+.report-header-band {
+  background: linear-gradient(135deg, #1e66ff 0%, #0047cc 100%);
+  color: white;
+  padding: 28px 36px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.report-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.report-brand-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.report-brand-text h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.report-brand-text p {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.report-meta-right {
+  text-align: right;
+  font-size: 12px;
+  opacity: 0.85;
+  line-height: 1.8;
+}
+
+.report-meta-right strong {
+  font-size: 14px;
+  opacity: 1;
+}
+
+/* Report Body */
+.report-body {
+  padding: 28px 36px 32px;
+}
+
+/* Case Info Row */
+.report-case-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.report-case-cell {
+  background: #f8fbff;
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.report-case-cell .cell-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.report-case-cell .cell-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+/* Section Heading */
+.report-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e0e7ff;
+}
+
+.report-section-heading i {
+  color: #1e66ff;
+}
+
+/* Images grid */
+.report-images-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.report-img-box {
+  background: #f8fbff;
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.report-img-box .img-box-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e3a8a;
+  padding: 10px 14px 6px;
+  background: #eef3ff;
+  letter-spacing: 0.3px;
+}
+
+.report-img-box img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  background: #000;
+  display: block;
+  padding: 8px;
+}
+
+/* Diagnosis block */
+.report-diagnosis-block {
+  background: #f8fbff;
+  border: 1px solid #e0e7ff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.report-diag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.report-diag-type {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.report-diag-type .diag-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.diag-icon.tumor {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.diag-icon.no-tumor {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.report-diag-type .diag-label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.report-diag-type .diag-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e3a8a;
+  line-height: 1.1;
+}
+
+/* Confidence bars */
+.report-conf-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conf-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.conf-bar-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e3a8a;
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.conf-bar-track {
+  flex: 1;
+  background: #e0e7ff;
+  border-radius: 6px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.conf-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #1e66ff, #0047cc);
+  transition: width 0.6s ease;
+}
+
+.conf-bar-fill.highest {
+  background: linear-gradient(90deg, #f59e0b, #dc2626);
+}
+
+.conf-bar-pct {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e66ff;
+  width: 46px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Explanation box */
+.report-explanation {
+  background: #eef3ff;
+  border-left: 4px solid #1e66ff;
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: #1e3a8a;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+/* Disclaimer */
+.report-disclaimer {
+  background: #fff7ed;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 12.5px;
+  color: #92400e;
+  line-height: 1.6;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.report-disclaimer i {
+  color: #f59e0b;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* Report Footer */
+.report-footer {
+  background: #f8fbff;
+  border-top: 1px solid #e0e7ff;
+  padding: 14px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+/* Modal action bar (NOT printed) */
+.report-action-bar {
+  display: flex;
+  gap: 12px;
+  padding: 18px 20px;
+  justify-content: flex-end;
+  background: #1a1a2e;
+  border-radius: 0 0 20px 20px;
+}
+
+.report-action-bar button {
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-close-report {
+  background: #2d2d44;
+  color: #aaa;
+}
+
+.btn-close-report:hover {
+  background: #3d3d5c;
+  color: #fff;
+}
+
+.btn-save-pdf {
+  background: linear-gradient(135deg, #1e66ff, #0047cc);
+  color: white;
+  box-shadow: 0 4px 14px rgba(30, 102, 255, 0.4);
+}
+
+.btn-save-pdf:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 102, 255, 0.55);
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #printableReport,
+  #printableReport * {
+    visibility: visible !important;
+  }
+
+  #printableReport {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    animation: none !important;
+  }
+
+  .report-action-bar {
+    display: none !important;
+  }
+  #reportModal {
+    display: block !important;
+    background: none !important;
+    padding: 0 !important;
+  }
+  #reportModal[style*="block"] {
+    display: block !important;
+  }
+  .report-content {
+    border-radius: 0 !important;
+  }
+}
+/* ============================================================
+   REPORT MODAL STYLES — append to detection.css
+   ============================================================ */
+
+/* Report Button */
+.report-btn {
+  background: linear-gradient(135deg, #1e66ff 0%, #0047cc 100%);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+.report-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(30, 102, 255, 0.35);
+}
+
+/* Report Modal */
+#reportModal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.85);
+  animation: fadeIn 0.3s;
+}
+
+#reportModal[style*="block"] {
+  display: flex !important;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 30px 20px;
+}
+
+/* Report Content (the printable card) */
+.report-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 780px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  font-family: "Segoe UI", sans-serif;
+  animation: slideDown 0.3s;
+  position: relative;
+}
+
+/* Report Header Band */
+.report-header-band {
+  background: linear-gradient(135deg, #1e66ff 0%, #0047cc 100%);
+  color: white;
+  padding: 28px 36px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.report-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.report-brand-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.report-brand-text h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.report-brand-text p {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.report-meta-right {
+  text-align: right;
+  font-size: 12px;
+  opacity: 0.85;
+  line-height: 1.8;
+}
+
+.report-meta-right strong {
+  font-size: 14px;
+  opacity: 1;
+}
+
+/* Report Body */
+.report-body {
+  padding: 28px 36px 32px;
+}
+
+/* Case Info Row */
+.report-case-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.report-case-cell {
+  background: #f8fbff;
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.report-case-cell .cell-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.report-case-cell .cell-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+/* Section Heading */
+.report-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e0e7ff;
+}
+
+.report-section-heading i {
+  color: #1e66ff;
+}
+
+/* Images grid */
+.report-images-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.report-img-box {
+  background: #f8fbff;
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.report-img-box .img-box-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e3a8a;
+  padding: 10px 14px 6px;
+  background: #eef3ff;
+  letter-spacing: 0.3px;
+}
+
+.report-img-box img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  background: #000;
+  display: block;
+  padding: 8px;
+}
+
+/* Diagnosis block */
+.report-diagnosis-block {
+  background: #f8fbff;
+  border: 1px solid #e0e7ff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.report-diag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.report-diag-type {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.report-diag-type .diag-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.diag-icon.tumor {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.diag-icon.no-tumor {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.report-diag-type .diag-label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.report-diag-type .diag-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e3a8a;
+  line-height: 1.1;
+}
+
+/* Confidence bars */
+.report-conf-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conf-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.conf-bar-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e3a8a;
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.conf-bar-track {
+  flex: 1;
+  background: #e0e7ff;
+  border-radius: 6px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.conf-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #1e66ff, #0047cc);
+  transition: width 0.6s ease;
+}
+
+.conf-bar-fill.highest {
+  background: linear-gradient(90deg, #f59e0b, #dc2626);
+}
+
+.conf-bar-pct {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e66ff;
+  width: 46px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Explanation box */
+.report-explanation {
+  background: #eef3ff;
+  border-left: 4px solid #1e66ff;
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: #1e3a8a;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+/* Disclaimer */
+.report-disclaimer {
+  background: #fff7ed;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 12.5px;
+  color: #92400e;
+  line-height: 1.6;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.report-disclaimer i {
+  color: #f59e0b;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* Modal action bar (NOT printed) */
+.report-action-bar {
+  display: flex;
+  gap: 12px;
+  padding: 18px 20px;
+  justify-content: flex-end;
+  background: #1a1a2e;
+  border-radius: 0 0 20px 20px;
+}
+
+.report-action-bar button {
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-close-report {
+  background: #2d2d44;
+  color: #aaa;
+}
+
+.btn-close-report:hover {
+  background: #3d3d5c;
+  color: #fff;
+}
+
+.btn-save-pdf {
+  background: linear-gradient(135deg, #1e66ff, #0047cc);
+  color: white;
+  box-shadow: 0 4px 14px rgba(30, 102, 255, 0.4);
+}
+
+.btn-save-pdf:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 102, 255, 0.55);
+}
+
+/* ============================================================
+   PRINT STYLES — clean isolated PDF output
+   ============================================================ */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  /* Hide everything on the page */
+  html,
+  body {
+    visibility: hidden !important;
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Hide every top-level element except the report modal */
+  body > *:not(#reportModal) {
+    display: none !important;
+  }
+
+  /* Modal becomes a plain full-page white container */
+  #reportModal {
+    visibility: visible !important;
+    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    z-index: 99999 !important;
+  }
+
+  /* The printable card fills the page */
+  #printableReport {
+    visibility: visible !important;
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    animation: none !important;
+    background: white !important;
+    overflow: visible !important;
+  }
+
+  #printableReport * {
+    visibility: visible !important;
+  }
+
+  /* Hide the Close / Save buttons */
+  .report-action-bar {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Force colour backgrounds & images to print */
+  .report-header-band,
+  .conf-bar-fill,
+  .diag-icon,
+  .report-disclaimer,
+  .report-explanation,
+  .report-case-cell,
+  .report-diagnosis-block,
+  .report-img-box .img-box-label,
+  .report-footer,
+  #rpt-mri-img,
+  #rpt-gradcam-img {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #rpt-mri-img,
+  #rpt-gradcam-img {
+    display: block !important;
+    max-height: 220px !important;
+    object-fit: contain !important;
+  }
+
+  /* Tighten spacing so it fits A4 */
+  .report-body {
+    padding: 18px 28px 20px !important;
+  }
+  .report-header-band {
+    padding: 18px 28px !important;
+  }
+  .report-case-row {
+    margin-bottom: 14px !important;
+  }
+  .report-images-grid {
+    margin-bottom: 14px !important;
+  }
+  .report-diagnosis-block {
+    margin-bottom: 12px !important;
+  }
+  .report-explanation {
+    margin-bottom: 12px !important;
+  }
+}
