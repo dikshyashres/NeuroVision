@@ -29,7 +29,7 @@ body {
 /* Header - Professional Medical Theme */
 .header {
   background: #ffffff;
-  color: #1178b6;
+  color: #1565b8;
   padding: 25px 40px;
   display: flex;
   align-items: center;
@@ -39,7 +39,7 @@ body {
 
 .header-icon {
   font-size: 32px;
-  background: #1178b6;
+  background: #1565b8;
   color: white;
   width: 60px;
   height: 60px;
@@ -53,7 +53,7 @@ body {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 5px;
-  color: #1178b6;
+  color: #1565b8;
   letter-spacing: 0.5px;
 }
 
@@ -72,7 +72,7 @@ body {
 /* Left Panel - Professional Welcome Section */
 .welcome-panel {
   flex: 1;
-  background: linear-gradient(145deg, #1178b6 0%, #1178b6 100%);
+  background: linear-gradient(145deg, #1565b8 0%, #1565b8 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -89,7 +89,7 @@ body {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(to right, #00aaff, #1178b6);
+  background: linear-gradient(to right, #00aaff, #1565b8);
 }
 
 .welcome-content {
@@ -156,7 +156,7 @@ body {
   padding: 16px;
   background: transparent;
   border: none;
-  color: #1178b6;
+  color: #1565b8;
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
@@ -172,11 +172,11 @@ body {
 .tab-btn:hover {
   background: rgba(0, 91, 187, 0.05);
   text-decoration: none;
-  color: #1178b6;
+  color: #1565b8;
 }
 
 .tab-btn.active {
-  background: #1178b6;
+  background: #1565b8;
   color: white;
 }
 
@@ -187,7 +187,7 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: #1178b6;
+  background: #1565b8;
 }
 
 /* Forms Container */
@@ -246,7 +246,7 @@ body {
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: #1178b6;
+  color: #1565b8;
   font-size: 16px;
 }
 
@@ -263,7 +263,7 @@ body {
 
 .input-group input:focus {
   outline: none;
-  border-color: #1178b6;
+  border-color: #1565b8;
   background: white;
   box-shadow: 0 0 0 3px rgba(0, 91, 187, 0.1);
 }
@@ -285,7 +285,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #1178b6;
+  color: #1565b8;
   font-size: 14px;
   cursor: pointer;
   font-weight: 500;
@@ -294,12 +294,12 @@ body {
 .checkbox-label input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #1178b6;
+  accent-color: #1565b8;
   cursor: pointer;
 }
 
 .link-text {
-  color: #1178b6;
+  color: #1565b8;
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
@@ -307,7 +307,7 @@ body {
 }
 
 .link-text:hover {
-  color: #1178b6;
+  color: #1565b8;
   text-decoration: underline;
 }
 
@@ -318,7 +318,7 @@ body {
 
 /* Submit Button - Medical Professional Style */
 .submit-btn {
-  background: linear-gradient(to right, #1178b6, #1178b6);
+  background: linear-gradient(to right, #1565b8, #1565b8);
   color: white;
   border: none;
   padding: 16px;
@@ -336,7 +336,7 @@ body {
 }
 
 .submit-btn:hover {
-  background: linear-gradient(to right, #1178b6, #1178b6);
+  background: linear-gradient(to right, #1565b8, #1565b8);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 91, 187, 0.2);
 }
@@ -356,14 +356,14 @@ body {
 }
 
 .form-footer a {
-  color: #1178b6;
+  color: #1565b8;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .form-footer a:hover {
-  color: #1178b6;
+  color: #1565b8;
   text-decoration: underline;
 }
 
@@ -410,11 +410,11 @@ body {
   border-radius: 8px;
   padding: 12px;
   margin-top: 20px;
-  border-left: 3px solid#1178b6;
+  border-left: 3px solid #1565b8;
 }
 
 .medical-note p {
-  color: #1178b6;
+  color: #1565b8;
   font-size: 13px;
   margin: 0;
   display: flex;
@@ -424,11 +424,11 @@ body {
 
 /* Focus States for Accessibility */
 input:focus-visible {
-  outline: 2px solid #1178b6;
+  outline: 2px solid #1565b8;
   outline-offset: 2px;
 }
 
 button:focus-visible {
-  outline: 2px solid#1178b6;
+  outline: 2px solid #1565b8;
   outline-offset: 2px;
 }

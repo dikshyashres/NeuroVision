@@ -6,7 +6,7 @@
 }
 
 body {
-  background: #f6f9ff;
+  background: #f5faff;
   color: #1f2a44;
 }
 
@@ -26,7 +26,7 @@ body {
 .logo {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #1e66ff 0%, #869fce 100%);
+  background: #1565b8;
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -41,13 +41,13 @@ body {
 
 .header-text h1 {
   font-size: 28px;
-  color: #1e3a8a;
+  color: #1565b8;
   margin-bottom: 4px;
   font-weight: 700;
 }
 
 .header-text p {
-  color: #2563eb;
+  color: #1565b8;
   font-size: 14px;
   margin: 0;
 }
@@ -71,31 +71,35 @@ body {
 }
 
 .nav-links a:hover {
-  background: #f0f6ff;
-  color: #1e66ff;
+  background: #e8f4ff;
+  color: #1565b8;
+}
+
+.nav-links a.active {
+  background: #1565b8;
+  color: white;
 }
 
 /* Logout button - RED */
 .logout-btn {
-  background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
-  color: white !important;
-  padding: 10px 20px !important;
+  background: #fee2e2;
+  color: #dc2626 !important;
+  padding: 8px 16px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 600 !important;
-  box-shadow: 0 3px 10px rgba(255, 68, 68, 0.2);
-  transition: all 0.3s ease !important;
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 16px;
   text-decoration: none;
+  cursor: pointer;
+  border: none;
 }
 
 .logout-btn:hover {
-  background: linear-gradient(135deg, #cc0000 0%, #990000 100%) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 68, 68, 0.3) !important;
+  background: #fecaca !important;
+  transform: none;
+  box-shadow: none;
 }
 
 .logout-btn:active {
@@ -121,7 +125,7 @@ body {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 102, 204, 0.55);
+  background: rgba(17, 120, 182, 0.55);
 }
 
 .hero-content {
@@ -197,7 +201,7 @@ body {
 
 .info-right h2 {
   font-size: 40px;
-  color: #0066cc;
+  color: #1565b8;
   margin-bottom: 20px;
 }
 
@@ -223,9 +227,9 @@ body {
   margin-top: 20px;
   padding: 12px 32px;
   font-size: 16px;
-  border: 2px solid #0066cc;
+  border: 2px solid #1565b8;
   background: transparent;
-  color: #0066cc;
+  color: #1565b8;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -233,22 +237,22 @@ body {
 }
 
 .see-more:hover {
-  background: #0066cc;
+  background: #1565b8;
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 102, 204, 0.2);
+  box-shadow: 0 5px 15px rgba(21, 101, 184, 0.2);
 }
 
 /* CTA Section */
 .cta-section {
   text-align: center;
   padding: 60px 40px;
-  background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+  background: #1565b8;
   border-radius: 15px;
   margin: 60px auto;
   max-width: 800px;
   color: white;
-  box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
+  box-shadow: 0 10px 30px rgba(21, 101, 184, 0.2);
 }
 
 .cta-section h2 {
@@ -269,7 +273,7 @@ body {
   gap: 12px;
   padding: 16px 40px;
   background: white;
-  color: #0066cc;
+  color: #1565b8;
   text-decoration: none;
   border-radius: 8px;
   font-size: 18px;
@@ -291,7 +295,7 @@ body {
 
 /* FOOTER */
 .footer {
-  background: #0066cc;
+  background: #1565b8;
   color: white;
   text-align: center;
   padding: 40px 20px;
