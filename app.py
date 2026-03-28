@@ -18,7 +18,7 @@ app.secret_key = "neurovision_secret_key_2024_prod_12345"
 # -----------------------------
 # Gemini API Config (FREE)
 # -----------------------------
-GEMINI_API_KEY = "enter your api key"
+GEMINI_API_KEY = "enter yor api key"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
 
 # -----------------------------
