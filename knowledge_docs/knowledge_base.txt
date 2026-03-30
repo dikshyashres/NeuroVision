@@ -1,0 +1,163 @@
+# ============================================================
+# NeuroVision AI — Medical Knowledge Base
+# ============================================================
+# This file is the single source of truth for the RAG pipeline.
+# It is loaded automatically by knowledge_base.py at runtime.
+#
+# FORMAT RULES:
+#   - Lines starting with # are comments and are ignored.
+#   - Empty lines are ignored.
+#   - Every other line = one knowledge fact (one sentence each).
+#   - To add new knowledge, simply add a new line below.
+# ============================================================
+
+
+# ------------------------------------------------------------
+# SECTION 1: GLIOMA
+# ------------------------------------------------------------
+
+Glioma is a type of brain tumor that arises from glial cells, which are the supportive cells of the brain and spinal cord.
+Gliomas are classified into low-grade (slow-growing, less aggressive) and high-grade (fast-growing, aggressive) types.
+High-grade gliomas such as Glioblastoma Multiforme (GBM) are the most aggressive and have a poor prognosis.
+Low-grade gliomas grow slowly and may not cause symptoms for years, but can eventually transform into high-grade tumors.
+Glioma symptoms include persistent headaches, seizures, memory problems, personality changes, and vision or speech difficulties.
+Treatment for glioma typically involves surgery to remove as much tumor as possible, followed by radiation therapy and chemotherapy.
+Temozolomide is a standard chemotherapy drug used to treat glioblastoma after surgery and radiation.
+Gliomas account for about 33% of all brain tumors and are more common in adults between 45 and 65 years old.
+MRI scans are the primary imaging tool for detecting and monitoring gliomas due to their high soft tissue contrast.
+Glioma recurrence is common even after aggressive treatment, making regular MRI follow-up essential for monitoring.
+The median survival for glioblastoma (GBM) is approximately 14 to 16 months even with optimal treatment.
+IDH mutation status is a key molecular marker in glioma classification and strongly influences prognosis.
+IDH-mutant gliomas generally have a better prognosis compared to IDH-wildtype gliomas.
+MGMT promoter methylation predicts better response to temozolomide chemotherapy in glioblastoma patients.
+Bevacizumab (Avastin) is an anti-angiogenic drug sometimes used for recurrent glioblastoma to slow tumor blood vessel growth.
+Gliomas can arise in any part of the brain but are most commonly found in the cerebral hemispheres in adults.
+Pediatric gliomas often occur in the brainstem and cerebellum and may behave differently from adult gliomas.
+
+
+# ------------------------------------------------------------
+# SECTION 2: MENINGIOMA
+# ------------------------------------------------------------
+
+Meningioma is a tumor that arises from the meninges, the three layers of membranes that surround the brain and spinal cord.
+Most meningiomas are benign (non-cancerous) and grow very slowly, but some can be atypical or malignant.
+Meningiomas are the most common primary brain tumor, accounting for about 37% of all brain tumors.
+Women are more likely to develop meningiomas than men, especially during middle age, suggesting a hormonal influence.
+Many meningiomas are discovered incidentally on brain scans done for other reasons and may not need immediate treatment.
+Symptoms of meningioma depend on location and include headaches, vision problems, hearing loss, memory loss, and weakness in limbs.
+Treatment options for meningioma include observation (watchful waiting), surgery, and radiation therapy.
+Radiosurgery such as Gamma Knife is a non-invasive treatment option for small or surgically inaccessible meningiomas.
+Meningiomas located near critical brain structures may be difficult to remove completely, increasing the risk of recurrence.
+Exposure to ionizing radiation is a known risk factor for developing meningioma.
+WHO Grade I meningiomas are benign with low recurrence risk; Grade II (atypical) and Grade III (malignant) carry higher recurrence rates.
+Meningiomas can compress nearby brain tissue or nerves without invading them, which distinguishes them from malignant tumors.
+Spinal meningiomas occur along the spinal cord and can cause back pain, weakness, or sensory changes in the limbs.
+Long-term follow-up with periodic MRI is recommended even after successful meningioma surgery to detect any recurrence early.
+
+
+# ------------------------------------------------------------
+# SECTION 3: PITUITARY TUMOR
+# ------------------------------------------------------------
+
+Pituitary tumors, also called pituitary adenomas, arise from the pituitary gland located at the base of the brain.
+The pituitary gland controls many hormones including growth hormone, thyroid-stimulating hormone, and reproductive hormones.
+Most pituitary tumors are benign and do not spread to other parts of the body.
+Pituitary tumors are classified as functioning (hormone-secreting) or non-functioning (not secreting active hormones).
+Functioning pituitary tumors can cause hormonal disorders such as Cushing's disease, acromegaly, or hyperprolactinemia.
+Cushing's disease is caused by a pituitary tumor that produces excess ACTH, leading to dangerously high cortisol levels.
+Acromegaly results from a pituitary tumor secreting excess growth hormone, causing abnormal growth of hands, feet, and face.
+Hyperprolactinemia caused by a prolactinoma can lead to irregular menstrual cycles in women and reduced testosterone in men.
+Symptoms of pituitary tumors include headaches, vision problems (especially loss of peripheral vision), fatigue, and hormonal imbalances.
+Bitemporal hemianopia (loss of side vision in both eyes) is a classic sign of a pituitary tumor pressing on the optic chiasm.
+Treatment for pituitary tumors includes medication, surgery through the nose (transsphenoidal surgery), and radiation therapy.
+Dopamine agonists like cabergoline or bromocriptine are first-line medications for prolactin-secreting pituitary tumors.
+Macroadenomas are pituitary tumors larger than 10mm and are more likely to cause visual symptoms due to compression of nearby structures.
+Microadenomas are pituitary tumors smaller than 10mm, often found incidentally, and carry a better prognosis.
+Pituitary apoplexy is a rare but serious emergency caused by sudden bleeding or infarction within a pituitary tumor.
+
+
+# ------------------------------------------------------------
+# SECTION 4: NO TUMOR (NORMAL MRI)
+# ------------------------------------------------------------
+
+A normal brain MRI shows no evidence of tumor, abnormal masses, or suspicious lesions.
+Even with a normal MRI result, patients should follow up with their doctor if neurological symptoms persist.
+Normal MRI findings mean the AI model detected no signs of glioma, meningioma, or pituitary tumor in the scan.
+A clear MRI scan is reassuring but does not rule out all neurological conditions — clinical evaluation remains important.
+Some early-stage or very small tumors may not be visible even on high-quality MRI, so clinical correlation is always necessary.
+
+
+# ------------------------------------------------------------
+# SECTION 5: GRAD-CAM EXPLAINABILITY
+# ------------------------------------------------------------
+
+Grad-CAM stands for Gradient-weighted Class Activation Mapping, a technique that visualizes which regions of an image influenced the AI model's decision.
+In Grad-CAM heatmaps, red and yellow regions indicate areas the model focused on most heavily when making its prediction.
+Blue and green regions in a Grad-CAM heatmap indicate areas the model paid little attention to during classification.
+Grad-CAM helps doctors and patients understand why the AI made a specific classification, improving transparency and trust.
+The Grad-CAM overlay shows the heatmap superimposed on the original MRI scan for easy visual comparison by clinicians.
+Grad-CAM is generated from the last convolutional layer of the neural network, which captures the most high-level visual features.
+If Grad-CAM highlights the center or a specific lobe of the brain, it suggests the suspected tumor may be located in that region.
+Grad-CAM is an explainability tool — it does not replace a radiologist's interpretation but helps guide attention to suspicious areas.
+When no tumor is detected, Grad-CAM is not generated because there is no class activation to visualize.
+The NeuroVision system uses VGG16, a deep convolutional neural network, with Grad-CAM to provide visual explanations for its predictions.
+Grad-CAM was introduced by Selvaraju et al. in 2017 and has since become a standard explainability method in medical AI systems.
+Using Grad-CAM in clinical AI tools supports the principle of Explainable AI (XAI), which is critical for trust and regulatory compliance.
+
+
+# ------------------------------------------------------------
+# SECTION 6: BRAIN MRI FUNDAMENTALS
+# ------------------------------------------------------------
+
+MRI (Magnetic Resonance Imaging) uses strong magnetic fields and radio waves to create detailed images of the brain.
+Brain MRI is the gold standard imaging technique for detecting brain tumors due to its superior soft tissue contrast.
+A contrast-enhanced MRI uses a gadolinium-based dye injected into the bloodstream to highlight abnormal areas more clearly.
+MRI scans are non-invasive and do not use ionizing radiation, making them safe for repeated use over time.
+T1-weighted MRI images are useful for seeing brain anatomy, while T2-weighted images better highlight fluid and abnormalities.
+FLAIR (Fluid-Attenuated Inversion Recovery) MRI sequences are particularly useful for detecting tumors and edema near the brain surface.
+Brain tumors can appear as bright or dark spots on MRI depending on their type, water content, and contrast enhancement pattern.
+MRI-guided biopsy allows surgeons to precisely sample tumor tissue from a specific region for laboratory pathological analysis.
+Functional MRI (fMRI) maps brain activity and is used before surgery to identify critical brain regions to preserve.
+Diffusion Tensor Imaging (DTI) MRI tracks white matter fiber tracts and helps surgeons plan safe operative corridors through the brain.
+CT scans are faster and more available than MRI but provide less soft tissue detail and are often used in emergency settings.
+MRI spectroscopy (MRS) measures chemical metabolites in brain tissue and can help distinguish tumor from radiation necrosis.
+Perfusion MRI measures blood flow in the brain and is useful for grading tumors and assessing treatment response.
+
+
+# ------------------------------------------------------------
+# SECTION 7: SYMPTOMS AND GENERAL BRAIN TUMOR INFORMATION
+# ------------------------------------------------------------
+
+Common symptoms of brain tumors include persistent headaches (especially in the morning), seizures, nausea, and vomiting.
+Cognitive symptoms of brain tumors can include memory loss, difficulty concentrating, and personality or behavior changes.
+Motor symptoms such as weakness or numbness in arms or legs may indicate a brain tumor affecting motor pathways.
+Vision problems including blurred vision, double vision, or loss of peripheral vision can be caused by brain tumors.
+Speech difficulties such as slurred speech or trouble finding words (aphasia) can be signs of a brain tumor in language areas.
+Brain tumor headaches are often worse in the morning, may wake patients from sleep, and worsen with coughing or bending over.
+Not all brain tumors cause symptoms, especially slow-growing ones, and many are found incidentally during imaging for other reasons.
+Risk factors for brain tumors include family history, prior exposure to ionizing radiation, and certain genetic syndromes.
+Brain tumor diagnosis requires a combination of imaging (MRI/CT), neurological examination, and often a tissue biopsy for confirmation.
+Survival rates for brain tumors vary widely depending on tumor type, grade, location, patient age, and overall health.
+Seizures occur in approximately 30 to 50 percent of brain tumor patients and are often the first presenting symptom.
+Increased intracranial pressure from a brain tumor can cause a triad of headache, vomiting, and papilledema (swelling of the optic disc).
+Brain metastases (tumors that spread from other cancers) are actually more common than primary brain tumors in adults.
+Lung, breast, melanoma, kidney, and colon cancers are the most common sources of brain metastases.
+Corticosteroids such as dexamethasone are used to reduce brain swelling (cerebral edema) around brain tumors.
+
+
+# ------------------------------------------------------------
+# SECTION 8: NEUROVISION AI SYSTEM INFORMATION
+# ------------------------------------------------------------
+
+The NeuroVision AI system classifies brain MRI scans into four categories: Glioma, Meningioma, Pituitary Tumor, and No Tumor.
+NeuroVision uses a VGG16 deep convolutional neural network fine-tuned on a labeled dataset of brain MRI images.
+The model was trained using supervised learning with MRI images labeled by category: glioma, meningioma, pituitary, and no tumor.
+Data augmentation techniques such as rotation, flipping, and zoom were applied during training to improve model generalization.
+The NeuroVision RAG pipeline retrieves the most relevant medical facts from this knowledge base to explain each AI prediction.
+RAG stands for Retrieval-Augmented Generation, a technique that combines a retrieval system with a language model for grounded answers.
+Sentence embeddings are used to find the most semantically similar knowledge facts to the user's query in the RAG pipeline.
+The NeuroVision AI system is a decision-support tool and should never be used as a substitute for professional medical diagnosis.
+Always consult a qualified neurologist or neurosurgeon for proper evaluation and treatment planning after any scan result.
+The AI predictions made by NeuroVision carry a confidence score that reflects the model's certainty about its classification.
+A lower confidence score means the model is less certain and the case should be prioritized for expert clinical review.
+NeuroVision is designed to assist radiologists and clinicians, not to replace them, by flagging suspicious regions for review.
