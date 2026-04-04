@@ -20,9 +20,9 @@ from knowledge_base import get_all_knowledge
 # Add as many Gemini API keys as you want here.
 # When one hits the rate limit (429) or daily limit, the next key is tried automatically.
 GEMINI_API_KEYS = [
-    "AIzaSyA7-F1KhcS-3jE08xEzo2HcntJ5WhAlOAA",  # Key 1
-    "AIzaSyAfUKkjFoEL75Hm3r7zozHvslXDOjCe9D8",             # Key 2
-    "AIzaSyDf3m1XvuaZlLr5D_2q16S15NJwUGLd9nA",              # Key 3 
+    "enter your api key",  # Key 1
+    "enter your api key",             # Key 2
+    "enter your api key",              # Key 3 
 ]
 
 GEMINI_BASE_URL = (
