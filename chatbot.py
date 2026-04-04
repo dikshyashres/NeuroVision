@@ -20,9 +20,9 @@ from knowledge_base import get_all_knowledge
 # Add as many Gemini API keys as you want here.
 # When one hits the rate limit (429) or daily limit, the next key is tried automatically.
 GEMINI_API_KEYS = [
-    "enter your api key 1",  # Key 1
-    "enter your api key  2",             # Key 2
-    "enter your api key ",              # Key 3 
+    "AIzaSyA7-F1KhcS-3jE08xEzo2HcntJ5WhAlOAA",  # Key 1
+    "AIzaSyAfUKkjFoEL75Hm3r7zozHvslXDOjCe9D8",             # Key 2
+    "AIzaSyDf3m1XvuaZlLr5D_2q16S15NJwUGLd9nA",              # Key 3 
 ]
 
 GEMINI_BASE_URL = (
@@ -60,17 +60,17 @@ def _rotate_key() -> bool:
 # -----------------------------
 # SBERT Setup (loads once at import)
 # -----------------------------
-print("🔄 Loading SBERT model...")
+print(" Loading SBERT model...")
 _sbert_model = SentenceTransformer("all-MiniLM-L6-v2")  # fast & lightweight
 
-print("🔄 Encoding knowledge base...")
+print(" Encoding knowledge base...")
 _knowledge_chunks: list[str] = get_all_knowledge()
 _knowledge_embeddings = _sbert_model.encode(
     _knowledge_chunks,
     convert_to_tensor=True,
     show_progress_bar=False,
 )
-print(f"✅ SBERT ready — {len(_knowledge_chunks)} chunks indexed")
+print(f" SBERT ready — {len(_knowledge_chunks)} chunks indexed")
 
 # -----------------------------
 # RAG Retrieval
@@ -256,22 +256,22 @@ def get_chat_reply(user_message: str, context: dict, history: list) -> str:
 
         except requests.exceptions.HTTPError as e:
             status = e.response.status_code
-            print(f"❌ Gemini HTTP error {status} on key {_current_key_index + 1}: {e.response.text}")
+            print(f" Gemini HTTP error {status} on key {_current_key_index + 1}: {e.response.text}")
 
             if status in (429, 503):
                 # Rate limit or quota exceeded — try next key
-                print(f"⚠️ Key {_current_key_index + 1} limit reached. Trying next key...")
+                print(f" Key {_current_key_index + 1} limit reached. Trying next key...")
                 if not _rotate_key():
-                    return "⏳ All API keys have reached their limit. Please add a new key or wait until the quota resets."
+                    return " All API keys have reached their limit. Please add a new key or wait until the quota resets."
                 continue  # retry with new key
 
             if status == 400:
-                return "⚠️ Invalid API key. Please check your GEMINI_API_KEYS list."
+                return " Invalid API key. Please check your GEMINI_API_KEYS list."
 
-            return f"⚠️ API error ({status}). Please try again in a moment."
+            return f" API error ({status}). Please try again in a moment."
 
         except Exception as e:
-            print(f"❌ Gemini error: {e}")
+            print(f" Gemini error: {e}")
             return "Sorry, something went wrong. Please try again."
 
-    return "⏳ All API keys have reached their limit. Please add a new key or wait until the quota resets."
+    return " All API keys have reached their limit. Please add a new key or wait until the quota resets."

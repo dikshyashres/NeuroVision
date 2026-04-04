@@ -53,7 +53,7 @@ def load_primary_knowledge(filepath: str = PRIMARY_KB_FILE) -> list[str]:
                 continue
             facts.append(line)
 
-    print(f"✅ Loaded {len(facts)} facts from '{filepath}'")
+    print(f" Loaded {len(facts)} facts from '{filepath}'")
     return facts
 
 
@@ -110,10 +110,10 @@ def _load_pdf_file(filepath: str) -> list[str]:
         full_text = re.sub(r"\s+", " ", full_text).strip()
         return _chunk_text(full_text)
     except ImportError:
-        print("⚠️  pypdf not installed. Run: pip install pypdf")
+        print("  pypdf not installed. Run: pip install pypdf")
         return []
     except Exception as e:
-        print(f"⚠️  Could not read PDF '{filepath}': {e}")
+        print(f"  Could not read PDF '{filepath}': {e}")
         return []
 
 
@@ -145,11 +145,11 @@ def load_extra_documents(folder: str = KNOWLEDGE_DOCS_FOLDER) -> list[str]:
         filepath = os.path.join(folder, filename)
 
         if filename.endswith(".txt"):
-            print(f"📄 Loading extra text file : {filename}")
+            print(f" Loading extra text file : {filename}")
             chunks.extend(_load_txt_file(filepath))
 
         elif filename.endswith(".pdf"):
-            print(f"📄 Loading extra PDF file  : {filename}")
+            print(f" Loading extra PDF file  : {filename}")
             chunks.extend(_load_pdf_file(filepath))
 
     if chunks:
@@ -175,5 +175,5 @@ def get_all_knowledge() -> list[str]:
     extra   = load_extra_documents()
     combined = primary + extra
 
-    print(f"✅ Total knowledge base: {len(combined)} retrievable units")
+    print(f" Total knowledge base: {len(combined)} retrievable units")
     return combined

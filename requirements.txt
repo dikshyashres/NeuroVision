@@ -4,3 +4,6 @@ numpy
 Pillow
 h5py
 requests
+pypdf
+
+

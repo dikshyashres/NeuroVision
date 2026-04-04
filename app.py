@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory  
 from tensorflow.keras.models import model_from_json
 import numpy as np
 import base64
@@ -14,39 +14,39 @@ from gradcam import generate_gradcam
 from chatbot import get_chat_reply
 
 app = Flask(__name__)
-app.secret_key = "neurovision_secret_key_2024_prod_12345"
+app.secret_key = "neurovision_secret_key_2024_prod_12345" #session login security
 
 # -----------------------------
 # Configuration
 # -----------------------------
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg', '.png', '.gif']
-app.config['SESSION_PERMANENT'] = False
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024           
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.jpeg', '.png', '.gif']  
+app.config['SESSION_PERMANENT'] = False 
 
 # -----------------------------
 # Simple User Database
 # -----------------------------
-USERS_FILE = 'users.json'
+USERS_FILE = 'users.json' 
 
-def load_users():
-    if os.path.exists(USERS_FILE):
+def load_users(): 
+    if os.path.exists(USERS_FILE): 
         with open(USERS_FILE, 'r') as f:
-            return json.load(f)
+            return json.load(f) 
     return {}
 
-def save_users(users):
+def save_users(users): 
     with open(USERS_FILE, 'w') as f:
-        json.dump(users, f, indent=2)
+        json.dump(users, f, indent=2) 
 
 def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+    return hashlib.sha256(password.encode()).hexdigest() 
 
 def validate_email(email):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(pattern, email) is not None
+    return re.match(pattern, email) is not None 
 
 def validate_password(password):
-    if len(password) < 6:
+    if len(password) < 6: 
         return False, "Password must be at least 6 characters"
     return True, ""
 
@@ -64,15 +64,15 @@ try:
         if os.path.exists(MODEL_WEIGHTS):
             loaded_model.load_weights(MODEL_WEIGHTS)
             loaded_model.trainable = False
-            print("✅ Model loaded successfully")
+            print(" Model loaded successfully")
         else:
-            print(f"❌ Weights file not found: {MODEL_WEIGHTS}")
+            print(f" Weights file not found: {MODEL_WEIGHTS}")
             loaded_model = None
     else:
-        print(f"❌ Model JSON not found: {MODEL_JSON}")
+        print(f" Model JSON not found: {MODEL_JSON}")
         loaded_model = None
 except Exception as e:
-    print(f"❌ Error loading model: {str(e)}")
+    print(f" Error loading model: {str(e)}")
     loaded_model = None
 
 CLASS_NAMES = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
@@ -134,7 +134,7 @@ def login():
                 'created_at': str(np.datetime64('now')),
             }
             save_users(users)
-            print(f"✅ New user registered: {email}")
+            print(f" New user registered: {email}")
             return render_template("index.html", success_message="Registration successful! Please login with your credentials.")
 
         else:  # Login form
@@ -150,7 +150,7 @@ def login():
             if email in users and hashlib.sha256(password.encode()).hexdigest() == users[email]['password_hash']:
                 session['user'] = email
                 session['name'] = users[email]['name']
-                print(f"✅ User '{email}' logged in")
+                print(f" User '{email}' logged in")
                 return redirect(url_for("home"))
 
             error_msg = "Account not found. Please register first." if email not in users else "Invalid email or password"
@@ -210,11 +210,11 @@ def predict():
             # Grad-CAM only when a tumor is detected
             gradcam_data = None
             if tumor_type != 'No Tumor':
-                print(f"🔥 Generating Grad-CAM for {tumor_type}...")
+                print(f" Generating Grad-CAM for {tumor_type}...")
                 try:
                     gradcam_data = generate_gradcam(loaded_model, img_array, class_idx)
                 except Exception as grad_error:
-                    print(f"❌ Grad-CAM error: {grad_error}")
+                    print(f"Grad-CAM error: {grad_error}")
 
             results.append({
                 "tumor_type":        tumor_type,
@@ -226,7 +226,7 @@ def predict():
         return jsonify({"success": True, "predictions": results, "count": len(results)})
 
     except Exception as e:
-        print(f"❌ Prediction error: {str(e)}")
+        print(f" Prediction error: {str(e)}")
         return jsonify({"error": f"Prediction failed: {str(e)}"}), 500
 
 @app.route("/chat", methods=["POST"])
@@ -250,7 +250,7 @@ def logout():
     if 'user' in session:
         email = session['user']
         session.clear()
-        print(f"👋 User '{email}' logged out")
+        print(f" User '{email}' logged out")
     return redirect(url_for("login"))
 
 @app.route("/static/<path:filename>")
@@ -266,14 +266,14 @@ if __name__ == "__main__":
 
     if not os.path.exists(USERS_FILE):
         save_users({})
-        print(f"📁 Created users database: {USERS_FILE}")
+        print(f" Created users database: {USERS_FILE}")
 
     print("\n" + "="*50)
-    print("🧠 NeuroVision AI Diagnostic System")
+    print(" NeuroVision AI Diagnostic System")
     print("="*50)
     print(f"{'✅' if loaded_model else '⚠️ '} Model: {'VGG16 loaded' if loaded_model else 'NOT loaded!'}")
-    print("✅ Gemini chatbot ready")
-    print("🌐 http://localhost:5000")
+    print(" Gemini chatbot ready")
+    print(" http://localhost:5000")
     print("="*50 + "\n")
 
     app.run(debug=True, port=5000, host='0.0.0.0')
