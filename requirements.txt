@@ -4,6 +4,10 @@ numpy
 Pillow
 h5py
 requests
+<<<<<<< Updated upstream
 pypdf
 
 
+=======
+sentence_transformers
+>>>>>>> Stashed changes
