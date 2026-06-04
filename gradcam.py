@@ -28,7 +28,7 @@ def generate_gradcam(model, img_array, pred_index=None):
     """
     try:
         print(f"\n{'='*60}")
-        print("🔥 Starting Grad-CAM generation...")
+        print(" Starting Grad-CAM generation...")
         print(f"   Model layers: {len(model.layers)}")
         print(f"   Image shape:  {img_array.shape}")
         print(f"   Pred index:   {pred_index}")
@@ -41,10 +41,10 @@ def generate_gradcam(model, img_array, pred_index=None):
                 break
 
         if last_conv_layer is None:
-            print("❌ No convolutional layer found in model!")
+            print(" No convolutional layer found in model!")
             return None
 
-        print(f"✅ Using conv layer: {last_conv_layer.name}")
+        print(f" Using conv layer: {last_conv_layer.name}")
 
         # ── Build gradient model ──────────────────────────────────────
         try:
@@ -53,7 +53,7 @@ def generate_gradcam(model, img_array, pred_index=None):
                 outputs=[model.output, last_conv_layer.output]
             )
         except Exception as e:
-            print(f"❌ Failed to create gradient model: {e}")
+            print(f" Failed to create gradient model: {e}")
             return None
 
         # ── Forward pass with gradient tape ──────────────────────────
@@ -90,11 +90,11 @@ def generate_gradcam(model, img_array, pred_index=None):
 
             grads = tape.gradient(class_channel, conv_outputs)
             if grads is None:
-                print("❌ Gradients are None!")
+                print(" Gradients are None!")
                 return None
 
         except Exception as e:
-            print(f"❌ Error during forward/gradient pass: {e}")
+            print(f" Error during forward/gradient pass: {e}")
             traceback.print_exc()
             return None
 
@@ -133,7 +133,7 @@ def generate_gradcam(model, img_array, pred_index=None):
 
     except Exception as e:
         print(f"\n{'='*60}")
-        print(f"❌ GRAD-CAM FATAL ERROR: {e}")
+        print(f" GRAD-CAM FATAL ERROR: {e}")
         traceback.print_exc()
         print(f"{'='*60}\n")
         return None
